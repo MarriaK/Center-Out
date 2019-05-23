@@ -54,7 +54,7 @@ if IsWin,
 elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Center-Out/';
 else,
-    projectdir = '~/Projects/Center-Out/';
+    projectdir = '~/Projects/GangulyLab/Center-Out/';
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
