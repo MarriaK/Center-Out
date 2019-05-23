@@ -17,9 +17,9 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.CenterReset      = true;
+Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
 Params.Assistance       = 0.1; %0.05; % value btw 0 and 1, 1 full assist
-Params.DaggerAssist = false;
+Params.DaggerAssist 	= false;
 
 Params.CLDA.Type        = 0; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
