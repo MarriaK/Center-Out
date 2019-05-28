@@ -17,14 +17,14 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
-Params.Assistance       = 0.1; %0.05; % value btw 0 and 1, 1 full assist
+Params.CenterReset      = false; % if true, cursor automatically is at center at trial start
+Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= false;
 
 Params.CLDA.Type        = 0; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
 
-Params.InitializationMode = 3; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
+Params.InitializationMode = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
 Params.BaselineTime     = 0; % secs
 Params.BadChannels      = [];
 Params.SpatialFiltering = false;
@@ -54,7 +54,7 @@ if IsWin,
 elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Center-Out/';
 else,
-    projectdir = '~/Projects/GangulyLab/Center-Out/';
+    projectdir = '~/Projects/Center-Out/';
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
@@ -92,6 +92,10 @@ Params.ReachTargetPositions = ...
     + Params.ReachTargetRadius ...
     * [cosd(Params.ReachTargetAngles) sind(Params.ReachTargetAngles)];
 Params.NumReachTargets = length(Params.ReachTargetAngles);
+
+Params.ReachTargetSamplingVec = [0 0 0 1 1 1 0 0];
+Params.ReachTargetSamplingVec = Params.ReachTargetSamplingVec ...
+    / sum(Params.ReachTargetSamplingVec);
 
 %% Cursor
 Params.CursorColor = [0,102,255];
@@ -132,14 +136,15 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 2;
+Params.NumAdaptBlocks       = 8;
 Params.NumFixedBlocks       = 0;
-Params.NumTrialsPerBlock    = 2;length(Params.ReachTargetAngles);
-Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat
+Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
+Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
     case 1, Params.TargetFunc = @(n) mod(randperm(n),Params.NumReachTargets)+1;
     case 2, Params.TargetFunc = @(n) mod(randi(n,1,n),Params.NumReachTargets)+1;
     case 3, Params.TargetFunc = @(a,b) mod((a-1)*ones(1,b),Params.NumReachTargets)+1;
+    case 4, Params.TargetFunc = @(n) randsample(1:Params.NumReachTargets,n,true,Params.ReachTargetSamplingVec);
 end
 
 %% CLDA Parameters
@@ -150,8 +155,8 @@ Params.CLDA.UpdateTime = 80; % secs, for smooth batch
 Params.CLDA.Alpha = exp(log(.5) / (120/Params.CLDA.UpdateTime)); % for smooth batch
 
 % Lambda
-Params.CLDA.Lambda = 500; %exp(log(.5) / (30*Params.UpdateRate)); % for RML
-FinalLambda = 500; %exp(log(.5) / (500*Params.UpdateRate));
+Params.CLDA.Lambda = 5000; % for RML
+FinalLambda = 5000; % for RML
 DeltaLambda = (FinalLambda - Params.CLDA.Lambda) ...
     / ((Params.NumAdaptBlocks-3)...
     *Params.NumTrialsPerBlock...

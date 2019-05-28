@@ -51,7 +51,7 @@ for Block=1:NumBlocks, % Block Loop
 
     % random order of reach targets for each block
     switch Params.TargetSelectionFlag,
-        case {1,2},
+        case {1,2,4},
             TargetOrder = Params.TargetFunc(Params.NumTrialsPerBlock);
         case 3,
             TargetOrder = Params.TargetFunc(Block,Params.NumTrialsPerBlock);
