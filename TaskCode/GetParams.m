@@ -21,19 +21,19 @@ Params.CenterReset      = false; % if true, cursor automatically is at center at
 Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= false;
 
-Params.CLDA.Type        = 0; % 0-none, 1-refit, 2-smooth batch, 3-RML
+Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
 
-Params.InitializationMode = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
-Params.BaselineTime     = 0; % secs
-Params.BadChannels      = [];
-Params.SpatialFiltering = false;
+Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
+Params.BaselineTime         = 0; % secs
+Params.BadChannels          = [];
+Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain             = 1;
-Params.VelocityTransformFlag = false;
-Params.MaxVelocityFlag = false;
-Params.MaxVelocity = 200;
+Params.Gain                     = 1;
+Params.VelocityTransformFlag    = false;
+Params.MaxVelocityFlag          = false;
+Params.MaxVelocity              = 200;
 
 %% Current Date and Time
 % get today's date
@@ -105,13 +105,14 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 
 %% Kalman Filter Properties
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
-dt = 1/Params.UpdateRate;
+G = Params.Gain;
+t = 1/Params.UpdateRate;
 a = .8^.5; % .8
 w = 750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
-        1	0	dt	0	0;
-        0	1	0	dt	0;
+        1	0	G*t	0	0;
+        0	1	0	G*t	0;
         0	0	a	0	0;
         0	0	0	a	0;
         0	0	0	0	1];
@@ -136,7 +137,7 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 8;
+Params.NumAdaptBlocks       = 4;
 Params.NumFixedBlocks       = 0;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
@@ -211,7 +212,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag = true;
+Params.GenNeuralFeaturesFlag = false;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;

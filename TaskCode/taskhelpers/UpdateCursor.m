@@ -15,7 +15,7 @@ function KF = UpdateCursor(Params,Neuro,TaskFlag,TargetPos,KF)
 global Cursor
 
 % query optimal control policy
-Vopt = Params.Gain * OptimalCursorUpdate(Params,TargetPos);
+Vopt = OptimalCursorUpdate(Params,TargetPos);
 
 if TaskFlag==1, % do nothing during imagined movements
     return;
