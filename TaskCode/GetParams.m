@@ -30,7 +30,7 @@ Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 1;
+Params.Gain                     = 2;
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
 Params.MaxVelocity              = 200;
@@ -77,7 +77,7 @@ Params.ScreenRefreshRate = 5; % Hz
 Params.UpdateRate = 5; % Hz
 
 %% Targets
-Params.TargetSize = 50;
+Params.TargetSize = 30;
 Params.OutTargetColor = [55,255,0];
 Params.InTargetColor = [255,55,0];
 
@@ -99,7 +99,7 @@ Params.ReachTargetSamplingVec = Params.ReachTargetSamplingVec ...
 
 %% Cursor
 Params.CursorColor = [0,102,255];
-Params.CursorSize = 15;
+Params.CursorSize = 10;
 Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
     +Params.CursorSize +Params.CursorSize];
 
@@ -108,7 +108,7 @@ Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, s
 G = Params.Gain;
 t = 1/Params.UpdateRate;
 a = .8^.5; % .8
-w = 750 * 100^2 / 200^2; % 750
+w = 100; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
         1	0	G*t	0	0;
@@ -137,8 +137,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 4;
-Params.NumFixedBlocks       = 0;
+Params.NumAdaptBlocks       = 0;
+Params.NumFixedBlocks       = 1;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,

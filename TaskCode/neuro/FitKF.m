@@ -22,6 +22,22 @@ if KF.InitializationMode==3 && fitFlag==0,
     datadir = uigetdir(datadir);
 end
 
+% If Initialization Mode = 4, load kf params from persistence folder
+if KF.InitializationMode==4 && fitFlag==0,
+    f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
+    KF.Lambda = Params.CLDA.Lambda;
+    KF.R = f.KF.R;
+    KF.S = f.KF.S;
+    KF.T = f.KF.T;
+    KF.ESS = f.KF.ESS;
+    KF.C = f.KF.C;
+    KF.Q = f.KF.Q;
+    KF.Tinv = f.KF.Tinv;
+    KF.Qinv = f.KF.Qinv;
+    fprintf('\n\nLoading Previous Kalman Filter:\n')
+    return
+end
+
 % ouput to screen
 fprintf('\n\nFitting Kalman Filter:\n')
 switch fitFlag,
@@ -40,22 +56,6 @@ switch fitFlag,
         fprintf('  Smooth Batch\n')
         fprintf('  Data in %s\n', datadir)
         fprintf('  Trials: {%s-%s}\n', TrialBatch{1},TrialBatch{end})
-end
-
-% If Initialization Mode = 4, manually choose trial and load kf params, do
-% not fit
-if KF.InitializationMode==4 && fitFlag==0,
-    f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
-    KF.Lambda = Params.CLDA.Lambda;
-    KF.R = f.KF.R;
-    KF.S = f.KF.S;
-    KF.T = f.KF.T;
-    KF.ESS = f.KF.ESS;
-    KF.C = f.KF.C;
-    KF.Q = f.KF.Q;
-    KF.Tinv = f.KF.Tinv;
-    KF.Qinv = f.KF.Qinv;
-    return
 end
 
 % grab data trial data
