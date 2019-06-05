@@ -93,6 +93,7 @@ switch Cursor.ControlMode,
         K = P*C'/(C*P*C' + Q);
         X = X + K*(Y - C*X);
         P = P - K*C*P;
+        %P(1:2,1:2) = zeros(2); % innovation from refit
         
         % Store Params
         Cursor.State = X;
