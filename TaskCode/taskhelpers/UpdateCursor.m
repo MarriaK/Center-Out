@@ -88,12 +88,14 @@ switch Cursor.ControlMode,
         % Kalman Predict Step
         X = A*X;
         P = A*P*A' + W;
+        P(1:2,:) = zeros(2,5); % zero out pos and pos-vel terms
+        P(:,1:2) = zeros(5,2); % innovation from refit
+        P(5,5) = zeros(1);
         
         % Kalman Update Step
         K = P*C'/(C*P*C' + Q);
         X = X + K*(Y - C*X);
         P = P - K*C*P;
-        %P(1:2,1:2) = zeros(2); % innovation from refit
         
         % Store Params
         Cursor.State = X;
