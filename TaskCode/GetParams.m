@@ -19,7 +19,7 @@ end
 %% Control
 Params.CenterReset      = false; % if true, cursor automatically is at center at trial start
 Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
-Params.DaggerAssist 	= false;
+Params.DaggerAssist 	= true;
 
 Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
@@ -31,6 +31,7 @@ Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
 Params.Gain                     = 2;
+Params.OptimalVeloctityMode     = 2; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
 Params.MaxVelocity              = 200;
@@ -70,7 +71,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = false;
+Params.ArduinoSync = true;
 
 %% Timing
 Params.ScreenRefreshRate = 5; % Hz
@@ -131,13 +132,44 @@ if Params.ControlMode>=3,
     end
 end
 
+%% LQR Optimal Velocity Controller
+if Params.OptimalVeloctityMode==2,
+    Params.CursorController.A = [...
+        1	0	t	0;
+        0	1	0	t;
+        0	0	a	0;
+        0	0	0	a];
+    Params.CursorController.B = [...
+        0   0   0   0
+        0   0   0   0
+        0   0   1   0
+        0   0   0   1];
+    qp = 2.5e0;
+    qv = 0;
+    Params.CursorController.Q = [...
+        qp  0   0   0
+        0   qp  0   0
+        0   0   qv  0
+        0   0   0   qv];
+    rp = 1e0;
+    rv = 3e0;
+    Params.CursorController.R = [...
+        rp  0   0   0
+        0   rp  0   0
+        0   0   rv  0
+        0   0   0   rv];
+    Params.CursorController.K = dlqr(...
+        Params.CursorController.A,Params.CursorController.B,...
+        Params.CursorController.Q,Params.CursorController.R);    
+end
+
 %% Velocity Command Online Feedback
 Params.DrawVelCommand.Flag = true;
 Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 0;
+Params.NumAdaptBlocks       = 2;
 Params.NumFixedBlocks       = 1;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
