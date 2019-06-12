@@ -147,7 +147,7 @@ for Block=1:NumBlocks, % Block Loop
         Instructions = [...
             sprintf('\n\nFinished block %i of %i\n\n',Block,NumBlocks),...
             '\nPress the ''Space Bar'' to resume task.' ];
-        InstructionScreen(Params,Instructions)
+        Neuro = InstructionScreen(Params,Instructions,Neuro);
     else,
         WaitSecs(Params.InterBlockInterval);
     end
