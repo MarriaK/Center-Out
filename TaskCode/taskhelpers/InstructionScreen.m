@@ -5,9 +5,11 @@ global Cursor
 
 % determine whether to update stats during break
 if Params.BLACKROCK ...
-        && (Params.UpdateChStatsFlag || Params.UpdateFeaturesFlag) ...
+        && (Params.UpdateChStatsFlag || Params.UpdateFeatureStatsFlag) ...
         && exist('Neuro','var'),
     UpdateFlag = 1;
+    Neuro.UpdateChStatsFlag = true;
+    Neuro.UpdateFeatureStatsFlag = true;
 else
     UpdateFlag = 0;
 end
@@ -40,6 +42,8 @@ end
 
 % return Neuro, which contains updated stats
 if UpdateFlag,
+    Neuro.UpdateChStatsFlag = false;
+    Neuro.UpdateFeatureStatsFlag = false;
     varargout{1} = Neuro;
 end
 

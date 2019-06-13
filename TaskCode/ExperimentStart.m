@@ -80,8 +80,8 @@ Neuro.NumBuffer         = Params.NumBuffer;
 Neuro.NumHilbert        = Params.NumHilbert;
 Neuro.NumFeatures       = Params.NumFeatures;
 Neuro.LastUpdateTime    = GetSecs;
-Neuro.UpdateChStatsFlag = Params.UpdateChStatsFlag;
-Neuro.UpdateFeatureStatsFlag = Params.UpdateFeatureStatsFlag;
+Neuro.UpdateChStatsFlag = false;
+Neuro.UpdateFeatureStatsFlag = false;
 Neuro.ChMap             = Params.ChMap;
 Neuro.SpatialFiltering  = Params.SpatialFiltering;
 
@@ -204,8 +204,8 @@ try
         Neuro = RunBaseline(Params,Neuro);
         
         % set flags back to original vals
-        Neuro.UpdateChStatsFlag = Params.UpdateChStatsFlag;
-        Neuro.UpdateFeatureStatsFlag = Params.UpdateFeatureStatsFlag;
+        Neuro.UpdateChStatsFlag = false;
+        Neuro.UpdateFeatureStatsFlag = false;
         Neuro.DimRed.Flag = Params.DimRed.Flag;
 
         % save of useful stats and params
