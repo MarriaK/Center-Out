@@ -238,6 +238,10 @@ try
         [Neuro,KF,Params] = RunTask(Params,Neuro,3,KF);
     end
     
+    % Save persistence folder with Data
+    copyfile(fullfile(Params.ProjectDir,'TaskCode','persistence'),...
+        fullfile(Params.Datadir,'persistence'));
+    
     % Pause and Finish!
     ExperimentStop();
     
