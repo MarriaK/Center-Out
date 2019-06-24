@@ -136,8 +136,9 @@ for Block=1:NumBlocks, % Block Loop
         save(fullfile(Params.ProjectDir,'TaskCode','persistence','feature_stats.mat'),...
             'feature_stats','-v7.3','-nocompression');
         if TaskFlag>1,
+            FeatureMask = Params.FeatureMask;
             save(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'),...
-                'KF','-v7.3','-nocompression');
+                'KF','FeatureMask','-v7.3','-nocompression');
         end
         
     end % Trial Loop

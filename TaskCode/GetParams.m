@@ -26,12 +26,12 @@ Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & la
 
 Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
 Params.BaselineTime         = 0; % secs
-Params.BadChannels          = [];
+Params.BadChannels          = [2];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 2;
-Params.OptimalVeloctityMode     = 2; % 1-vector to target, 2-LQR
+Params.Gain                     = 1;
+Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
 Params.MaxVelocity              = 200;
@@ -71,7 +71,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = true;
+Params.ArduinoSync = false;
 
 %% Timing
 Params.ScreenRefreshRate = 5; % Hz
@@ -108,8 +108,8 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
 G = Params.Gain;
 t = 1/Params.UpdateRate;
-a = .8^.5; % .8
-w = 100; %750 * 100^2 / 200^2; % 750
+a = .8; % .8
+w = 150; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
         1	0	G*t	0	0;
@@ -169,8 +169,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 2;
-Params.NumFixedBlocks       = 1;
+Params.NumAdaptBlocks       = 1;
+Params.NumFixedBlocks       = 0;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
@@ -244,7 +244,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag = false;
+Params.GenNeuralFeaturesFlag = true;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;
@@ -412,6 +412,16 @@ for feature=Params.NumPhase+1:Params.NumFeatures,
             'Spatial Filter Sizes are Inconsistent')
     end
 end
+
+%% Feature Mask
+
+% sets all bad channels to 0, o.w. 1
+Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+for i=1:length(Params.BadChannels),
+    bad_ch = Params.BadChannels(i);
+    Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+end
+Params.FeatureMask = Mask==1;
 
 end % GetParams
 

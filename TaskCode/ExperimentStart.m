@@ -84,15 +84,7 @@ Neuro.UpdateChStatsFlag = Params.UpdateChStatsFlag;
 Neuro.UpdateFeatureStatsFlag = Params.UpdateFeatureStatsFlag;
 Neuro.ChMap             = Params.ChMap;
 Neuro.SpatialFiltering  = Params.SpatialFiltering;
-
-% create a bad feature mask
-Mask = ones(Params.NumChannels*Params.NumFeatures,1);
-for i=1:length(Params.BadChannels),
-    bad_ch = Params.BadChannels(i);
-    Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
-end
-Neuro.FeatureMask = Mask==1;
-Params.FeatureMask = Mask==1;
+Neuro.FeatureMask       = Params.FeatureMask;
 
 % initialize filter bank state
 for i=1:length(Params.FilterBank),
