@@ -415,13 +415,22 @@ end
 
 %% Feature Mask
 
-% sets all bad channels to 0, o.w. 1
-Mask = ones(Params.NumChannels*Params.NumFeatures,1);
-for i=1:length(Params.BadChannels),
-    bad_ch = Params.BadChannels(i);
-    Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+% % sets all bad channels to 0, o.w. 1
+% Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+% for i=1:length(Params.BadChannels),
+%     bad_ch = Params.BadChannels(i);
+%     Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+% end
+% Params.FeatureMask = Mask==1;
+
+% loads feature mask
+[filename,pathname] = uigetfile('*.mat');
+if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+    Params.FeatureMask = (ones(Params.NumChannels*Params.NumFeatures,1)==1);
+else, % user selected file
+    f = load(fullfile(pathname,filename));
+    Params.FeatureMask = f.mask==1;
 end
-Params.FeatureMask = Mask==1;
 
 end % GetParams
 
