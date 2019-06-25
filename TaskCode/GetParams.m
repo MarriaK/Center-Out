@@ -26,7 +26,7 @@ Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & la
 
 Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
 Params.BaselineTime         = 0; % secs
-Params.BadChannels          = [2];
+Params.BadChannels          = [1];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity

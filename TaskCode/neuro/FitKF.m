@@ -27,6 +27,7 @@ if KF.InitializationMode==4 && fitFlag==0,
     f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
     if all(Params.FeatureMask == f.FeatureMask), % load full KF
         KF.Lambda = Params.CLDA.Lambda;
+        KF.P = f.KF.P;
         KF.R = f.KF.R;
         KF.ESS = f.KF.ESS;
         KF.S = f.KF.S;
@@ -39,6 +40,7 @@ if KF.InitializationMode==4 && fitFlag==0,
         [filename,pathname] = uigetfile('*.mat');
         f=load(fullfile(pathname,filename));
         KF.Lambda = Params.CLDA.Lambda;
+        KF.P = f.KF.P;
         KF.R = f.KF.R;
         KF.ESS = f.KF.ESS;
         KF.S = f.KF.S(Params.FeatureMask,:);
