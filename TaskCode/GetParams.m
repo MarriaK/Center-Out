@@ -24,9 +24,9 @@ Params.DaggerAssist 	= true;
 Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
 
-Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
+Params.InitializationMode   = 1; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
 Params.BaselineTime         = 0; % secs
-Params.BadChannels          = [1];
+Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
@@ -86,14 +86,17 @@ Params.StartTargetPosition  = [0,0];
 Params.TargetRect = ...
     [-Params.TargetSize -Params.TargetSize +Params.TargetSize +Params.TargetSize];
 
-Params.ReachTargetAngles = (0:45:315)';
-Params.ReachTargetRadius = 200;
-Params.ReachTargetPositions = ...
-    Params.StartTargetPosition ...
-    + Params.ReachTargetRadius ...
-    * [cosd(Params.ReachTargetAngles) sind(Params.ReachTargetAngles)];
-Params.NumReachTargets = length(Params.ReachTargetAngles);
+Params.ReachTargetGrid = (-200:50:200)';
+Params.ReachTargetPositions = [];
+for i=1:length(Params.ReachTargetGrid),
+    for ii=1:length(Params.ReachTargetGrid),
+        Params.ReachTargetPositions(end+1,:) = ...
+            Params.StartTargetPosition ...
+            + [Params.ReachTargetGrid(i),Params.ReachTargetGrid(ii)];
+    end
+end
 
+Params.NumReachTargets = size(Params.ReachTargetPositions,1);
 Params.ReachTargetSamplingVec = [0 0 0 1 1 1 0 0];
 Params.ReachTargetSamplingVec = Params.ReachTargetSamplingVec ...
     / sum(Params.ReachTargetSamplingVec);
@@ -171,7 +174,7 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 Params.NumImaginedBlocks    = 0;
 Params.NumAdaptBlocks       = 1;
 Params.NumFixedBlocks       = 0;
-Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
+Params.NumTrialsPerBlock    = 8;
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
     case 1, Params.TargetFunc = @(n) mod(randperm(n),Params.NumReachTargets)+1;
@@ -415,22 +418,22 @@ end
 
 %% Feature Mask
 
-% % sets all bad channels to 0, o.w. 1
-% Mask = ones(Params.NumChannels*Params.NumFeatures,1);
-% for i=1:length(Params.BadChannels),
-%     bad_ch = Params.BadChannels(i);
-%     Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
-% end
-% Params.FeatureMask = Mask==1;
-
-% loads feature mask
-[filename,pathname] = uigetfile('*.mat');
-if isequal(filename,0) || isequal(pathname,0), % pressed cancel
-    Params.FeatureMask = (ones(Params.NumChannels*Params.NumFeatures,1)==1);
-else, % user selected file
-    f = load(fullfile(pathname,filename));
-    Params.FeatureMask = f.mask==1;
+% sets all bad channels to 0, o.w. 1
+Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+for i=1:length(Params.BadChannels),
+    bad_ch = Params.BadChannels(i);
+    Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
 end
+Params.FeatureMask = Mask==1;
+
+% % loads feature mask
+% [filename,pathname] = uigetfile('*.mat');
+% if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+%     Params.FeatureMask = (ones(Params.NumChannels*Params.NumFeatures,1)==1);
+% else, % user selected file
+%     f = load(fullfile(pathname,filename));
+%     Params.FeatureMask = f.mask==1;
+% end
 
 end % GetParams
 

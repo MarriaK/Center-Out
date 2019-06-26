@@ -12,7 +12,6 @@ DataFields = struct(...
     'TrialStartTime',NaN,...
     'TrialEndTime',NaN,...
     'TargetID',NaN,...
-    'TargetAngle',NaN,...
     'TargetPosition',NaN,...
     'Time',[],...
     'ChStats',[],...
@@ -49,13 +48,6 @@ Cursor.LastPredictTime = tlast;
 Cursor.LastUpdateTime = tlast;
 for Block=1:NumBlocks, % Block Loop
 
-    % random order of reach targets for each block
-    switch Params.TargetSelectionFlag,
-        case {1,2,4},
-            TargetOrder = Params.TargetFunc(Params.NumTrialsPerBlock);
-        case 3,
-            TargetOrder = Params.TargetFunc(Block,Params.NumTrialsPerBlock);
-    end
     Cursor.State = [0,0,0,0,1]';
     Cursor.IntendedState = [0,0,0,0,1]';
     Cursor.Vcommand = [0,0]';
@@ -91,15 +83,17 @@ for Block=1:NumBlocks, % Block Loop
         
         % update trial
         Trial = Trial + 1;
-        TrialIdx = TargetOrder(TrialPerBlock);
+        TrialIdx = randi(Params.NumReachTargets);
         
         % set up trial
         TrialData = DataFields;
         TrialData.Block = Block;
         TrialData.Trial = Trial;
         TrialData.TargetID = TrialIdx;
-        TrialData.TargetAngle = Params.ReachTargetAngles(TrialIdx);
+        
+        % select random target position
         TrialData.TargetPosition = Params.ReachTargetPositions(TrialIdx,:);
+        
         % save kalman filter
         if Params.ControlMode>=3 && TaskFlag>=2 && ~Params.SaveKalmanFlag,
             TrialData.KalmanFilter{1}.A = KF.A;
