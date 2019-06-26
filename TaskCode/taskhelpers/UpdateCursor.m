@@ -90,7 +90,7 @@ switch Cursor.ControlMode,
         P = A*P*A' + W;
         P(1:2,:) = zeros(2,5); % zero out pos and pos-vel terms
         P(:,1:2) = zeros(5,2); % innovation from refit
-        P(5,5) = zeros(1);
+        %P(5,5) = zeros(1);
         
         % Kalman Update Step
         K = P*C'/(C*P*C' + Q);

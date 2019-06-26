@@ -26,11 +26,11 @@ Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & la
 
 Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
 Params.BaselineTime         = 0; % secs
-Params.BadChannels          = [1];
+Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 1;
+Params.Gain                             = 8;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
@@ -71,7 +71,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = false;
+Params.ArduinoSync = true;
 
 %% Timing
 Params.ScreenRefreshRate = 5; % Hz
@@ -108,7 +108,7 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
 G = Params.Gain;
 t = 1/Params.UpdateRate;
-a = .8; % .8
+a = .825; % .8
 w = 150; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
@@ -169,8 +169,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 1;
-Params.NumFixedBlocks       = 0;
+Params.NumAdaptBlocks       = 2;
+Params.NumFixedBlocks       = 2;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
@@ -244,7 +244,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag = true;
+Params.GenNeuralFeaturesFlag = false;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;
