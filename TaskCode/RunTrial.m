@@ -224,10 +224,15 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             else, StartCol = Params.OutTargetColor;
             end
             
+            % reach target
+            ReachRect = Params.TargetRect; % centered at (0,0)
+            ReachRect([1,3]) = ReachRect([1,3]) + ReachTargetPos(1) + Params.Center(1); % add x-pos
+            ReachRect([2,4]) = ReachRect([2,4]) + ReachTargetPos(2) + Params.Center(2); % add y-pos
+            
             % draw
             Screen('FillOval', Params.WPTR, ...
-                cat(1,StartCol,Params.CursorColor)', ...
-                cat(1,StartRect,CursorRect)')
+                cat(1,StartCol,Params.CursorColor,Params.NextTargCol)', ...
+                cat(1,StartRect,CursorRect,ReachRect)')
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);
@@ -490,6 +495,11 @@ if ~Data.ErrorID,
             Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
             Data.CursorAssist(1,end+1) = Cursor.Assistance;
             
+            % start target
+            StartRect = Params.TargetRect; % centered at (0,0)
+            StartRect([1,3]) = StartRect([1,3]) + StartTargetPos(1) + Params.Center(1); % add x-pos
+            StartRect([2,4]) = StartRect([2,4]) + StartTargetPos(2) + Params.Center(2); % add y-pos
+            
             % reach target
             ReachRect = Params.TargetRect; % centered at (0,0)
             ReachRect([1,3]) = ReachRect([1,3]) + ReachTargetPos(1) + Params.Center(1); % add x-pos
@@ -501,8 +511,8 @@ if ~Data.ErrorID,
             else, ReachCol = Params.OutTargetColor;
             end
             Screen('FillOval', Params.WPTR, ...
-                cat(1,ReachCol,Params.CursorColor)', ...
-                cat(1,ReachRect,CursorRect)')
+                cat(1,Params.NextTargCol,ReachCol,Params.CursorColor)', ...
+                cat(1,StartRect,ReachRect,CursorRect)')
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);

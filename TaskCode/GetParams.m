@@ -81,6 +81,7 @@ Params.UpdateRate = 5; % Hz
 Params.TargetSize = 30;
 Params.OutTargetColor = [55,255,0];
 Params.InTargetColor = [255,55,0];
+Params.NextTargCol = [60, 110, 60];
 
 Params.StartTargetPosition  = [0,0];
 Params.TargetRect = ...
