@@ -231,8 +231,9 @@ try
     end
     
     % Save persistence folder with Data
-    copyfile(fullfile(Params.ProjectDir,'TaskCode','persistence'),...
-        fullfile(Params.Datadir,'persistence'));
+    mkdir(fullfile(Params.Datadir,'persistence'))
+    copyfile(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'),...
+        fullfile(Params.Datadir,'persistence','kf_params.mat'));
     
     % Pause and Finish!
     ExperimentStop();
