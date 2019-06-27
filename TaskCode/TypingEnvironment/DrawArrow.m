@@ -9,6 +9,8 @@ p.addRequired('direction', @(x) x=='L' || x=='R')
 p.addOptional('HeadSize', 50, @isnumeric)
 p.addOptional('ShaftLength', 200, @isnumeric)
 p.addOptional('Color', @isnumeric)
+p.addOptional('Stroke', 3, @isnumeric)
+p.addOptional('StrokeColor', [0, 0, 0, 0], @isnumeric)
 p.CaseSensitive = false;
 parse(p, Params, tip, direction, varargin{:})
 
@@ -33,6 +35,9 @@ switch direction
 end
 
 Screen('FillPoly', Params.WPTR, color, points);
+if p.Results.Stroke > 0
+    Screen('FramePoly', Params.WPTR, p.Results.StrokeColor, points, p.Results.Stroke);
+end
 
 % Helper functions
     function c = choose_color(str_direction)

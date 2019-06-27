@@ -1,7 +1,5 @@
 function [ KP ] = SetKeyboardParams(Params)
-% function: Short description
-%
-% Extended description
+% [ KP ] = SetKeyboardParams(Params)
 
 % Targets
 KP = struct();
@@ -13,17 +11,45 @@ KP.TargetPosition = Params.ReachTargetPositions + Params.Center;
 KP.TargetRect = [-KP.TargetWidth / 2, -KP.TargetHeight / 2, KP.TargetWidth / 2, KP.TargetHeight / 2]; % Left, Top, Right, Bottom
 KP.CharColor = [255, 255, 0];
 KP.WordColor = [0, 255, 255];
+% Text
+KP.Text.CharacterSets = {'ABCD', 'MNOPQ', 'EFGH', 'RSTU', 'IJKL', 'VWXYZ'};
+KP.Text.SelectedCharacters = {};
+KP.Text.SelectedWords = {};
+KP.Text.CharDisplayOpts = {'FontSize', 25,...
+                            'Offset', [10, 18],...
+                             'Color', [170, 170, 170]};
+KP.Text.WordDisplayOpts = {'FontSize', 48,...
+                            'Offset', [18, 15],...
+                             'Color', [255, 255, 255]};
+KP.Text.NextWordSet = {'a', 'b', 'c', 'd', 'e', 'f'};
 
 % Keyboard layout
 KP.Pos = struct();
+KP.Pos.ArrowTargets = KP.TargetPosition([1, 5], :);
+KP.Pos.ArrowLabels = {'Forward', 'Back'};
 KP.Pos.TextTargets = sortrows([KP.TargetPosition(2:4, :); KP.TargetPosition(6:8, :)]);
 KP.Pos.F_Arrow = KP.TargetPosition(1, :) + [0.9 * KP.TargetWidth / 2, 0];
 KP.Pos.B_Arrow = KP.TargetPosition(5, :) - [0.9 * KP.TargetWidth / 2, 0];
 KP.Pos.TargetEdges = (repmat(KP.TargetPosition, 1, 2) + KP.TargetRect)';
+[~, ix_top_targ] = min(KP.TargetPosition(:, 2));
+[~, ix_right_targ] = max(KP.TargetPosition(:, 1));
+KP.Pos.CharDisplay = KP.TargetPosition(ix_top_targ, :) - [0, KP.TargetHeight * 0.75];
+KP.Pos.WordDisplay = KP.Pos.CharDisplay - [0, KP.TargetHeight];
+KP.Pos.WordBox.H = KP.TargetHeight * 4;
+KP.Pos.WordBox.W = KP.TargetWidth;
+KP.Pos.WordBox.O = [KP.TargetPosition(ix_right_targ, 1), KP.TargetPosition(ix_top_targ, 2)] + [KP.TargetWidth, 0];
+KP.Pos.WordBox.Edges = [KP.Pos.WordBox.O, KP.Pos.WordBox.O + [KP.Pos.WordBox.W, KP.Pos.WordBox.H]];
+KP.Pos.WordBox.Color = KP.WordColor;
 
-% Text
-KP.CharacterSets = {'ABCD', 'MNOPQ', 'EFGH', 'RSTU', 'IJKL', 'VWXYZ'};
-
-
+% State
+n_text = size(KP.Pos.TextTargets, 1);
+n_arrow = size(KP.Pos.ArrowTargets, 1);
+KP.State = struct();
+KP.State.InText = false(n_text, 1);
+KP.State.InArrow = false(n_arrow, 1);
+KP.State.Mode = 'Character'; % or 'Word' - set during task
+KP.State.Select = false; % indicates selection has been made
+KP.State.SelectableText = KP.Text.CharacterSets;
+KP.State.History = {};
 
 end  % function

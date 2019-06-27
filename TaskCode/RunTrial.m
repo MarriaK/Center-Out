@@ -496,16 +496,23 @@ if ~Data.ErrorID,
             ReachRect([2,4]) = ReachRect([2,4]) + ReachTargetPos(2) + Params.Center(2); % add y-pos
 
             % draw
-            inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
-            if inFlag, ReachCol = Params.InTargetColor;
-            else, ReachCol = Params.OutTargetColor;
-            end
-            if Params.Task == 'RadialKeyboard'
 
+            if Params.Task == 'RadialKeyboard'
+                UpdateKeyboard(Params);
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,ReachCol,Params.CursorColor)')
+                [Params.Keyboard, inFlag] = CheckKeys(Params.Keyboard, Cursor);
+                inFlag = any()
             else
-            Screen('FillOval', Params.WPTR, ...
-                cat(1,ReachCol,Params.CursorColor)', ...
-                cat(1,ReachRect,CursorRect)')
+                inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
+                if inFlag
+                    ReachCol = Params.InTargetColor;
+                else
+                    ReachCol = Params.OutTargetColor;
+                end
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,ReachCol,Params.CursorColor)', ...
+                    cat(1,ReachRect,CursorRect)')
             end
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
@@ -544,6 +551,8 @@ if ~Data.ErrorID,
         % end if in start target for hold time
         if InTargetTotalTime > Params.TargetHoldTime,
             done = 1;
+            if Params.Task == 'RadialKeyboard'
+                Params.Keyboard = MakeSelection(Params.Keyboard);
         end
     end % Reach Target Loop
 end % only complete if no errors

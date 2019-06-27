@@ -5,28 +5,36 @@ Params.BLACKROCK = 0;
 Params.DEBUG = 0;
 
 Params = GetParams(Params);
-[Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [2200 0 4000 1200]); % Left, Top, Right, Bottom
+[Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [1500 0 4000 2000]); % Left, Top, Right, Bottom
 Params.Center = [mean(Params.ScreenRectangle([1,3])),mean(Params.ScreenRectangle([2,4]))];
 TrialData.Block = 1;
 TrialData.Trial = 1;
 TrialData.TargetID = 1;
 
 % Code below to be added to CursorEnv master code
-KeyboardParams = SetKeyboardParams(Params);
-
-% Pos = KeyboardParams.Pos;
-% TargetWidth = KeyboardParams.TargetWidth;
-% TargetHeight = KeyboardParams.TargetHeight;
-% CharacterSets = KeyboardParams.CharacterSets;
-%
-%
-% Screen('FillRect', Params.WPTR, KP.CharColor, Pos.TargetEdges);
-% DrawText(Params, KeyboardParams.CharacterSets, Pos.TextTargets)
-% DrawArrow(Params, Pos.F_Arrow, 'R')
-% DrawArrow(Params, Pos.B_Arrow, 'L')
-%
-
-UpdateKeyboard
+KP = SetKeyboardParams(Params); % proabably add this to ExperimentStart
+Params.Keyboard = KP;
+UpdateKeyboard(Params);
 Screen('Flip', Params.WPTR);
 
+Cursor = struct('State', [0, 0, 100, 100]);
+Cursor.State = [KP.Pos.TextTargets(3, :) - KP.TargetWidth / 4, [100, 100]];
+Cursor.State = [KP.Pos.ArrowTargets(1, :) - KP.TargetWidth / 4, [100, 100]];
+Cursor.State = [KP.Pos.ArrowTargets(2, :) - KP.TargetWidth / 4, [100, 100]];
+[KP, inFlag] = CheckKeys(KP, Cursor);
+KP = MakeSelection(KP);
+Params.Keyboard = KP;
+UpdateKeyboard(Params);
+Screen('Flip', Params.WPTR);
+
+KP.State
+KP.Text
+
+KP.Pos
+
 Screen('CloseAll');
+
+KP.Pos.TargetEdges
+KP.TargetPosition
+islogical
+% -KP.TargetHeight * 3

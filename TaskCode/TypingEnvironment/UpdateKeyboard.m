@@ -1,13 +1,34 @@
-function UpdateKeyboard(Params, KeyboardParams)
+function UpdateKeyboard(Params)
 % function: Short description
 %
 % Extended description
 
-Pos = KeyboardParams.Pos;
+p = inputParser;
+p.addRequired('Params', @(x) isstruct(x) && isfield(x, 'Keyboard'))
+p.CaseSensitive = false;
+parse(p, Params)
 
-Screen('FillRect', Params.WPTR, KeyboardParams.CharColor, KeyboardParams.TargetEdges);
-DrawText(Params, KeyboardParams.CharacterSets, Pos.TextTargets)
+KP = Params.Keyboard;
+Pos = KP.Pos;
+
+switch KP.State.Mode
+    case 'Character'
+        targ_text = KP.Text.CharacterSets;
+        targ_color = KP.CharColor;
+    case 'Word'
+        targ_text = KP.Text.NextWordSet;
+        targ_color = KP.WordColor;
+    otherwise
+        targ_text = KP.Text.CharacterSets;
+        targ_color = KP.CharColor;
+end
+
+Screen('FillRect', Params.WPTR, targ_color, Pos.TargetEdges);
+Screen('FillRect', Params.WPTR, KP.Pos.WordBox.Color, KP.Pos.WordBox.Edges);
+DrawText(Params, targ_text, Pos.TextTargets)
+DrawText(Params, join(KP.Text.SelectedCharacters, '-'), KP.Pos.CharDisplay,  KP.Text.CharDisplayOpts{:})
+DrawText(Params, join(KP.Text.SelectedWords, ' '), KP.Pos.WordDisplay,  KP.Text.WordDisplayOpts{:})
+% DrawText(Params, join(KP.Text.SelectedWords, ' '), [100, 100],  KP.Text.WordDisplayOpts{:})
 DrawArrow(Params, Pos.F_Arrow, 'R')
 DrawArrow(Params, Pos.B_Arrow, 'L')
-
 end  % function

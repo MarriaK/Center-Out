@@ -191,6 +191,11 @@ Params.Center = [mean(Params.ScreenRectangle([1,3])),mean(Params.ScreenRectangle
 Screen('TextFont',Params.WPTR, 'Arial');
 Screen('TextSize',Params.WPTR, 28);
 
+% Initialze keyboard settings
+if Params.Task == 'RadialKeyboard'
+    Params.Keyboard = SetKeyboardParams(Params);
+end
+
 %% Start
 try
     % Baseline

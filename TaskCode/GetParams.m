@@ -51,11 +51,15 @@ if strcmpi(Params.Subject,'Test'),
 end
 
 if IsWin,
-    projectdir = 'C:\Users\ganguly-lab2\Documents\MATLAB\Center-Out';
+    % projectdir = 'C:\Users\ganguly-lab2\Documents\MATLAB\Center-Out';
+    projectdir = fullfile('C:\Users\ganguly-lab2\Documents\MATLAB', Params.Task);
+
 elseif IsOSX,
-    projectdir = '/Users/daniel/Projects/Center-Out/';
+    % projectdir = '/Users/daniel/Projects/Center-Out/';
+    projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
 else,
-    projectdir = '~/Projects/Center-Out/';
+    % projectdir = '~/Projects/Center-Out/';
+    projectdir = fullfile('~/Projects/', Params.Task);
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
