@@ -8,7 +8,7 @@ function Params = GetParams(Params)
 Params.Verbose = true;
 
 %% Experiment
-Params.Task = 'Center-Out';
+Params.Task = 'RadialKeyboard';
 switch Params.ControlMode,
     case 1, Params.ControlModeStr = 'MousePosition';
     case 2, Params.ControlModeStr = 'MouseVelocity';
@@ -17,7 +17,7 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.CenterReset      = false; % if true, cursor automatically is at center at trial start
+Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
 Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= true;
 
@@ -87,7 +87,7 @@ Params.TargetRect = ...
     [-Params.TargetSize -Params.TargetSize +Params.TargetSize +Params.TargetSize];
 
 Params.ReachTargetAngles = (0:45:315)';
-Params.ReachTargetRadius = 200;
+Params.ReachTargetRadius = 400;
 Params.ReachTargetPositions = ...
     Params.StartTargetPosition ...
     + Params.ReachTargetRadius ...
@@ -160,7 +160,7 @@ if Params.OptimalVeloctityMode==2,
         0   0   0   rv];
     Params.CursorController.K = dlqr(...
         Params.CursorController.A,Params.CursorController.B,...
-        Params.CursorController.Q,Params.CursorController.R);    
+        Params.CursorController.Q,Params.CursorController.R);
 end
 
 %% Velocity Command Online Feedback
@@ -203,7 +203,7 @@ Params.CLDA.FixedLambda = FinalLambda; % for RML during fixed
 
 switch Params.CLDA.AdaptType,
     case 'none',
-        Params.CLDA.DeltaLambda = 0;  
+        Params.CLDA.DeltaLambda = 0;
         Params.CLDA.DeltaAssistance = 0;
     case 'linear',
         switch Params.CLDA.Type,
@@ -311,14 +311,14 @@ Params.FilterBank(end).phase_flag = false;
 Params.FilterBank(end).feature = 5;
 Params.FilterBank(end).spatial_filt_sz = 3;
 
-Params.FilterBank(end+1).fpass = [30,36];   % low gamma1 
+Params.FilterBank(end+1).fpass = [30,36];   % low gamma1
 Params.FilterBank(end).buffer_flag = false;
 Params.FilterBank(end).hilbert_flag = false;
 Params.FilterBank(end).phase_flag = false;
 Params.FilterBank(end).feature = 6;
 Params.FilterBank(end).spatial_filt_sz = 3;
 
-Params.FilterBank(end+1).fpass = [36,42];   % low gamma2 
+Params.FilterBank(end+1).fpass = [36,42];   % low gamma2
 Params.FilterBank(end).buffer_flag = false;
 Params.FilterBank(end).hilbert_flag = false;
 Params.FilterBank(end).phase_flag = false;
@@ -414,4 +414,3 @@ for feature=Params.NumPhase+1:Params.NumFeatures,
 end
 
 end % GetParams
-

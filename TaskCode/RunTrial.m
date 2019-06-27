@@ -14,7 +14,7 @@ StartTargetPos = Params.StartTargetPosition;
 ReachTargetPos = Data.TargetPosition;
 
 % save kf once instead of throughout trial
-if ~Params.SaveKalmanFlag && Params.ControlMode>=3 && TaskFlag>1, 
+if ~Params.SaveKalmanFlag && Params.ControlMode>=3 && TaskFlag>1,
     Data.KalmanFilter{end+1} = [];
     Data.KalmanFilter{end}.C = KF.C;
     Data.KalmanFilter{end}.Q = KF.Q;
@@ -51,22 +51,22 @@ if ~Data.ErrorID && Params.InterTrialInterval>0,
     Data.Events(end).Str  = 'Inter Trial Interval';
     if Params.SerialSync, fprintf(Params.SerialPtr, '%s\n', 'ITI'); end
     if Params.ArduinoSync, PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,length(Data.Events)); end
-    
+
     if TaskFlag==1,
         OptimalCursorTraj = ...
             GenerateCursorTraj(Cursor.State,Cursor.State,Params.InterTrialInterval,Params);
         ct = 1;
     end
-    
+
     done = 0;
     TotalTime = 0;
     while ~done,
         % Update Time & Position
         tim = GetSecs;
-        
+
         % for pausing and quitting expt
         if CheckPause, [Neuro,Data,Params] = ExperimentPause(Params,Neuro,Data); end
-        
+
         % Update Screen Every Xsec
         if (tim-Cursor.LastPredictTime) > 1/Params.ScreenRefreshRate,
             % time
@@ -75,7 +75,7 @@ if ~Data.ErrorID && Params.InterTrialInterval>0,
             dt_vec(end+1) = dt; %#ok<*AGROW>
             Cursor.LastPredictTime = tim;
             Data.Time(1,end+1) = tim;
-            
+
             % grab and process neural data
             if ((tim-Cursor.LastUpdateTime)>1/Params.UpdateRate),
                 dT = tim-Cursor.LastUpdateTime;
@@ -100,7 +100,7 @@ if ~Data.ErrorID && Params.InterTrialInterval>0,
                     Data.NeuralFactors{end+1} = Neuro.NeuralFactors;
                 end
             end
-            
+
             % cursor
             if TaskFlag==1, % imagined movements
                 Cursor.State(3:4) = (OptimalCursorTraj(ct,:)'-Cursor.State(1:2))/dt;
@@ -118,15 +118,15 @@ if ~Data.ErrorID && Params.InterTrialInterval>0,
                     Data.KalmanFilter{end+1} = [];
                 end
             end
-            
+
             Screen('Flip', Params.WPTR);
         end
-        
+
         % end if takes too long
         if TotalTime > Params.InterTrialInterval,
             done = 1;
         end
-        
+
     end % Inter Trial Interval
 end % only complete if no errors
 
@@ -137,24 +137,24 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
     Data.Events(end).Str  = 'Start Target';
     if Params.SerialSync, fprintf(Params.SerialPtr, '%s\n', 'ST'); end
     if Params.ArduinoSync, PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,length(Data.Events)); end
-    
+
     if TaskFlag==1,
         OptimalCursorTraj = [...
             GenerateCursorTraj(Cursor.State,StartTargetPos,Params.ImaginedMvmtTime,Params);
             GenerateCursorTraj(StartTargetPos,StartTargetPos,Params.TargetHoldTime,Params)];
         ct = 1;
     end
-    
+
     done = 0;
     TotalTime = 0;
     InTargetTotalTime = 0;
     while ~done,
         % Update Time & Position
         tim = GetSecs;
-        
+
         % for pausing and quitting expt
         if CheckPause, [Neuro,Data,Params] = ExperimentPause(Params,Neuro,Data); end
-        
+
         % Update Screen Every Xsec
         if (tim-Cursor.LastPredictTime) > 1/Params.ScreenRefreshRate,
             tic;
@@ -164,7 +164,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             dt_vec(end+1) = dt;
             Cursor.LastPredictTime = tim;
             Data.Time(1,end+1) = tim;
-            
+
             % grab and process neural data
             if ((tim-Cursor.LastUpdateTime)>1/Params.UpdateRate),
                 dT = tim-Cursor.LastUpdateTime;
@@ -200,7 +200,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
                     Data.KalmanFilter{end}.Lambda = KF.Lambda;
                 end
             end
-            
+
             % cursor
             if TaskFlag==1, % imagined movements
                 Cursor.State(3:4) = (OptimalCursorTraj(ct,:)'-Cursor.State(1:2))/dt;
@@ -214,7 +214,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             Data.CursorState(:,end+1) = Cursor.State;
             Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
             Data.CursorAssist(1,end+1) = Cursor.Assistance;
-            
+
             % start target
             StartRect = Params.TargetRect; % centered at (0,0)
             StartRect([1,3]) = StartRect([1,3]) + StartTargetPos(1) + Params.Center(1); % add x-pos
@@ -223,7 +223,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             if inFlag, StartCol = Params.InTargetColor;
             else, StartCol = Params.OutTargetColor;
             end
-            
+
             % draw
             Screen('FillOval', Params.WPTR, ...
                 cat(1,StartCol,Params.CursorColor)', ...
@@ -241,7 +241,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             end
             Screen('DrawingFinished', Params.WPTR);
             Screen('Flip', Params.WPTR);
-            
+
             % start counting time if cursor is in target
             if inFlag,
                 InTargetTotalTime = InTargetTotalTime + dt;
@@ -249,7 +249,7 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
                 InTargetTotalTime = 0;
             end
         end
-        
+
         % end if takes too long
         if TotalTime > Params.MaxStartTime,
             done = 1;
@@ -257,13 +257,13 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             Data.ErrorStr = 'StartTarget';
             fprintf('ERROR: %s\n',Data.ErrorStr)
         end
-        
+
         % end if in start target for hold time
         if InTargetTotalTime > Params.TargetHoldTime,
             done = 1;
         end
     end
-    
+
 else % only complete if no errors and no automatic reset to center
     Cursor.State = [0,0,0,0,1]';
 end  % Start Target Loop
@@ -275,23 +275,23 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
     Data.Events(end).Str  = 'Instructed Delay';
     if Params.SerialSync, fprintf(Params.SerialPtr, '%s\n', 'ID'); end
     if Params.ArduinoSync, PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,length(Data.Events)); end
-    
+
     if TaskFlag==1,
         OptimalCursorTraj = ...
             GenerateCursorTraj(StartTargetPos,StartTargetPos,Params.InstructedDelayTime,Params);
         ct = 1;
     end
-    
+
     done = 0;
     TotalTime = 0;
     InTargetTotalTime = 0;
     while ~done,
         % Update Time & Position
         tim = GetSecs;
-        
+
         % for pausing and quitting expt
         if CheckPause, [Neuro,Data,Params] = ExperimentPause(Params,Neuro,Data); end
-        
+
         % Update Screen
         if (tim-Cursor.LastPredictTime) > 1/Params.ScreenRefreshRate,
             % time
@@ -300,7 +300,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             dt_vec(end+1) = dt;
             Cursor.LastPredictTime = tim;
             Data.Time(1,end+1) = tim;
-            
+
             % grab and process neural data
             if ((tim-Cursor.LastUpdateTime)>1/Params.UpdateRate),
                 dT = tim-Cursor.LastUpdateTime;
@@ -337,7 +337,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
                 %    end
                 %end
             end
-            
+
             % cursor
             if TaskFlag==1, % imagined movements
                 Cursor.State(3:4) = (OptimalCursorTraj(ct,:)'-Cursor.State(1:2))/dt;
@@ -351,7 +351,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             Data.CursorState(:,end+1) = Cursor.State;
             Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
             Data.CursorAssist(1,end+1) = Cursor.Assistance;
-            
+
             % start target
             StartRect = Params.TargetRect; % centered at (0,0)
             StartRect([1,3]) = StartRect([1,3]) + StartTargetPos(1) + Params.Center(1); % add x-pos
@@ -360,13 +360,13 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             if inFlag, StartCol = Params.InTargetColor;
             else, StartCol = Params.OutTargetColor;
             end
-            
+
             % reach target
             ReachRect = Params.TargetRect; % centered at (0,0)
             ReachRect([1,3]) = ReachRect([1,3]) + ReachTargetPos(1) + Params.Center(1); % add x-pos
             ReachRect([2,4]) = ReachRect([2,4]) + ReachTargetPos(2) + Params.Center(2); % add y-pos
             ReachCol = Params.OutTargetColor;
-            
+
             % draw
             %Screen('FillOval', Params.WPTR, ...
             %    cat(1,StartCol,ReachCol,Params.CursorColor)', ...
@@ -387,7 +387,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             end
             Screen('DrawingFinished', Params.WPTR);
             Screen('Flip', Params.WPTR);
-            
+
             % start counting time if cursor is in target
             if inFlag,
                 InTargetTotalTime = InTargetTotalTime + dt;
@@ -398,7 +398,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
                 fprintf('ERROR: %s\n',Data.ErrorStr)
             end
         end
-        
+
         % end if in start target for hold time
         if InTargetTotalTime > Params.InstructedDelayTime,
             done = 1;
@@ -413,24 +413,24 @@ if ~Data.ErrorID,
     Data.Events(end).Str  = 'Reach Target';
     if Params.SerialSync, fprintf(Params.SerialPtr, '%s\n', 'RT'); end
     if Params.ArduinoSync, PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,length(Data.Events)); end
-    
+
     if TaskFlag==1,
         OptimalCursorTraj = [...
             GenerateCursorTraj(StartTargetPos,ReachTargetPos,Params.ImaginedMvmtTime,Params);
             GenerateCursorTraj(ReachTargetPos,ReachTargetPos,Params.TargetHoldTime,Params)];
         ct = 1;
     end
-    
+
     done = 0;
     TotalTime = 0;
     InTargetTotalTime = 0;
     while ~done,
         % Update Time & Position
         tim = GetSecs;
-        
+
         % for pausing and quitting expt
         if CheckPause, [Neuro,Data,Params] = ExperimentPause(Params,Neuro,Data); end
-        
+
         % Update Screen
         if (tim-Cursor.LastPredictTime) > 1/Params.ScreenRefreshRate,
             % time
@@ -439,7 +439,7 @@ if ~Data.ErrorID,
             dt_vec(end+1) = dt;
             Cursor.LastPredictTime = tim;
             Data.Time(1,end+1) = tim;
-            
+
             % grab and process neural data
             if ((tim-Cursor.LastUpdateTime)>1/Params.UpdateRate),
                 dT = tim-Cursor.LastUpdateTime;
@@ -475,7 +475,7 @@ if ~Data.ErrorID,
                     Data.KalmanFilter{end}.Lambda = KF.Lambda;
                 end
             end
-            
+
             % cursor
             if TaskFlag==1, % imagined movements
                 Cursor.State(3:4) = (OptimalCursorTraj(ct,:)'-Cursor.State(1:2))/dt;
@@ -489,20 +489,24 @@ if ~Data.ErrorID,
             Data.CursorState(:,end+1) = Cursor.State;
             Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
             Data.CursorAssist(1,end+1) = Cursor.Assistance;
-            
+
             % reach target
             ReachRect = Params.TargetRect; % centered at (0,0)
             ReachRect([1,3]) = ReachRect([1,3]) + ReachTargetPos(1) + Params.Center(1); % add x-pos
             ReachRect([2,4]) = ReachRect([2,4]) + ReachTargetPos(2) + Params.Center(2); % add y-pos
-            
+
             % draw
             inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
             if inFlag, ReachCol = Params.InTargetColor;
             else, ReachCol = Params.OutTargetColor;
             end
+            if Params.Task == 'RadialKeyboard'
+
+            else
             Screen('FillOval', Params.WPTR, ...
                 cat(1,ReachCol,Params.CursorColor)', ...
                 cat(1,ReachRect,CursorRect)')
+            end
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);
@@ -520,7 +524,7 @@ if ~Data.ErrorID,
             end
             Screen('DrawingFinished', Params.WPTR);
             Screen('Flip', Params.WPTR);
-            
+
             % start counting time if cursor is in target
             if inFlag,
                 InTargetTotalTime = InTargetTotalTime + dt;
@@ -528,7 +532,7 @@ if ~Data.ErrorID,
                 InTargetTotalTime = 0;
             end
         end
-        
+
         % end if takes too long
         if TotalTime > Params.MaxReachTime,
             done = 1;
@@ -536,7 +540,7 @@ if ~Data.ErrorID,
             Data.ErrorStr = 'ReachTarget';
             fprintf('ERROR: %s\n',Data.ErrorStr)
         end
-        
+
         % end if in start target for hold time
         if InTargetTotalTime > Params.TargetHoldTime,
             done = 1;
@@ -565,7 +569,7 @@ else,
     % reset cursor
     Cursor.State = [0,0,0,0,1]';
     Cursor.IntendedState = [0,0,0,0,1]';
-    
+
     if Params.FeedbackSound,
         sound(Params.ErrorSound,Params.ErrorSoundFs)
     end
@@ -573,6 +577,3 @@ else,
 end
 
 end % RunTrial
-
-
-

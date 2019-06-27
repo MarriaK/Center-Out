@@ -193,7 +193,7 @@ Screen('TextSize',Params.WPTR, 28);
 
 %% Start
 try
-    % Baseline 
+    % Baseline
     if Params.BaselineTime>0,
         % turn on update stats flags
         Neuro.UpdateChStatsFlag = true;
@@ -202,7 +202,7 @@ try
 
         % collect data during baseline period
         Neuro = RunBaseline(Params,Neuro);
-        
+
         % set flags back to original vals
         Neuro.UpdateChStatsFlag = Params.UpdateChStatsFlag;
         Neuro.UpdateFeatureStatsFlag = Params.UpdateFeatureStatsFlag;
@@ -222,25 +222,25 @@ try
         Neuro.FeatureStats = f.feature_stats;
         clear('f');
     end
-    
+
     % Imagined Cursor Movements Loop
     if Params.NumImaginedBlocks>0,
         [Neuro,KF,Params] = RunTask(Params,Neuro,1,KF);
     end
-    
+
     % Adaptation Loop
     if Params.NumAdaptBlocks>0,
         [Neuro,KF,Params] = RunTask(Params,Neuro,2,KF);
     end
-    
+
     % Fixed Decoder Loop
     if Params.NumFixedBlocks>0,
         [Neuro,KF,Params] = RunTask(Params,Neuro,3,KF);
     end
-    
+
     % Pause and Finish!
     ExperimentStop();
-    
+
 catch ME, % handle errors gracefully
     Screen('CloseAll')
     for i=length(ME.stack):-1:1,
