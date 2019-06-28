@@ -225,9 +225,18 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
             end
 
             % draw
-            Screen('FillOval', Params.WPTR, ...
-                cat(1,StartCol,Params.CursorColor)', ...
-                cat(1,StartRect,CursorRect)')
+            if strcmpi(Params.Task, 'RadialKeyboard')
+                if Params.DEBUG, fprintf('Start Target\n'); end
+                UpdateKeyboard(Params);
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,Params.CursorColor)',...
+                    cat(1,ReachRect,CursorRect)')
+                [Params, inFlag] = CheckKeys(Params, Cursor);
+            else
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,StartCol,Params.CursorColor)', ...
+                    cat(1,StartRect,CursorRect)')
+            end
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);
@@ -368,12 +377,21 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             ReachCol = Params.OutTargetColor;
 
             % draw
-            %Screen('FillOval', Params.WPTR, ...
-            %    cat(1,StartCol,ReachCol,Params.CursorColor)', ...
-            %    cat(1,StartRect,ReachRect,CursorRect)')
-            Screen('FillOval', Params.WPTR, ...
-                cat(1,ReachCol,Params.CursorColor)', ...
-                cat(1,ReachRect,CursorRect)')
+            if strcmpi(Params.Task, 'RadialKeyboard')
+                if Params.DEBUG, fprintf('Delay'); end
+                UpdateKeyboard(Params);
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,Params.CursorColor)',...
+                    cat(1,CursorRect)')
+                [Params, inFlag] = CheckKeys(Params, Cursor);
+            else
+                %Screen('FillOval', Params.WPTR, ...
+                %    cat(1,StartCol,ReachCol,Params.CursorColor)', ...
+                %    cat(1,StartRect,ReachRect,CursorRect)')
+                Screen('FillOval', Params.WPTR, ...
+                    cat(1,ReachCol,Params.CursorColor)', ...
+                    cat(1,ReachRect,CursorRect)')
+            end
             if Params.DrawVelCommand.Flag && TaskFlag>1,
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);
@@ -497,12 +515,14 @@ if ~Data.ErrorID,
 
             % draw
 
-            if Params.Task == 'RadialKeyboard'
+            if strcmpi(Params.Task, 'RadialKeyboard')
+                % if Params.DEBUG, fprintf('Reach Target\n'); end
                 UpdateKeyboard(Params);
                 Screen('FillOval', Params.WPTR, ...
-                    cat(1,ReachCol,Params.CursorColor)')
-                [Params.Keyboard, inFlag] = CheckKeys(Params.Keyboard, Cursor);
-                inFlag = any()
+                    cat(1,Params.CursorColor)',...
+                    cat(1,CursorRect)')
+                [Params, inFlag] = CheckKeys(Params, Cursor);
+                if Params.DEBUG, fprintf('In Target: %i\n', inFlag); end
             else
                 inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
                 if inFlag
@@ -514,7 +534,7 @@ if ~Data.ErrorID,
                     cat(1,ReachCol,Params.CursorColor)', ...
                     cat(1,ReachRect,CursorRect)')
             end
-            if Params.DrawVelCommand.Flag && TaskFlag>1,
+            if Params.DrawVelCommand.Flag && (TaskFlag>1 || Params.DEBUG),
                 VelRect = Params.DrawVelCommand.Rect;
                 VelRect([1,3]) = VelRect([1,3]) + Params.Center(1);
                 VelRect([2,4]) = VelRect([2,4]) + Params.Center(2);
@@ -551,7 +571,7 @@ if ~Data.ErrorID,
         % end if in start target for hold time
         if InTargetTotalTime > Params.TargetHoldTime,
             done = 1;
-            if Params.Task == 'RadialKeyboard'
+            if strcmpi(Params.Task, 'RadialKeyboard')
                 Params.Keyboard = MakeSelection(Params.Keyboard);
         end
     end % Reach Target Loop

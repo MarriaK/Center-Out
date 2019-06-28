@@ -179,9 +179,10 @@ if strcmpi(str,'n'),
 end
 
 %% Initialize Window
-% Screen('Preference', 'SkipSyncTests', 0);
+Screen('Preference', 'SkipSyncTests', 0);
 if DEBUG
-    [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [50 50 1000 1000]);
+    % [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [50 50 1000 1000]);
+    [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [670 80 3170 2080]);
 else
     [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', max(Screen('Screens')), 0);
 end
@@ -192,7 +193,7 @@ Screen('TextFont',Params.WPTR, 'Arial');
 Screen('TextSize',Params.WPTR, 28);
 
 % Initialze keyboard settings
-if Params.Task == 'RadialKeyboard'
+if strcmpi(Params.Task, 'RadialKeyboard')
     Params.Keyboard = SetKeyboardParams(Params);
 end
 
@@ -215,6 +216,9 @@ try
 
         % save of useful stats and params
         ch_stats = Neuro.ChStats;
+        if ~exist(fullfile(Params.ProjectDir,'TaskCode','persistence'))
+            mkdir(fullfile(Params.ProjectDir,'TaskCode','persistence'))
+        end
         save(fullfile(Params.ProjectDir,'TaskCode','persistence','ch_stats.mat'),...
             'ch_stats','-v7.3','-nocompression');
         feature_stats = Neuro.FeatureStats;

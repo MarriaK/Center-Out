@@ -8,7 +8,7 @@ function Params = GetParams(Params)
 Params.Verbose = true;
 
 %% Experiment
-Params.Task = 'RadialKeyboard';
+Params.Task = 'RadialKeyboard'; %'Center-Out'; %'RadialKeyboard';
 switch Params.ControlMode,
     case 1, Params.ControlModeStr = 'MousePosition';
     case 2, Params.ControlModeStr = 'MouseVelocity';
@@ -31,7 +31,7 @@ Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
 Params.Gain                     = 2;
-Params.OptimalVeloctityMode     = 2; % 1-vector to target, 2-LQR
+Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
 Params.MaxVelocity              = 200;
@@ -51,15 +51,15 @@ if strcmpi(Params.Subject,'Test'),
 end
 
 if IsWin,
-    % projectdir = 'C:\Users\ganguly-lab2\Documents\MATLAB\Center-Out';
-    projectdir = fullfile('C:\Users\ganguly-lab2\Documents\MATLAB', Params.Task);
+    projectdir = 'C:\Users\ganguly-lab2\Documents\MATLAB\Center-Out';
+    % projectdir = fullfile('C:\Users\ganguly-lab2\Documents\MATLAB', Params.Task);
 
 elseif IsOSX,
-    % projectdir = '/Users/daniel/Projects/Center-Out/';
-    projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
+    projectdir = '/Users/daniel/Projects/Center-Out/';
+    % projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
 else,
     % projectdir = '~/Projects/Center-Out/';
-    projectdir = fullfile('~/Projects/', Params.Task);
+    projectdir = fullfile('../');
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
@@ -75,7 +75,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = true;
+Params.ArduinoSync = false;
 
 %% Timing
 Params.ScreenRefreshRate = 5; % Hz
@@ -173,7 +173,7 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 2;
+Params.NumAdaptBlocks       = 0;
 Params.NumFixedBlocks       = 1;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
@@ -192,8 +192,8 @@ Params.CLDA.UpdateTime = 80; % secs, for smooth batch
 Params.CLDA.Alpha = exp(log(.5) / (120/Params.CLDA.UpdateTime)); % for smooth batch
 
 % Lambda
-Params.CLDA.Lambda = 5000; % for RML
-FinalLambda = 5000; % for RML
+Params.CLDA.Lambda = 80; % for RML
+FinalLambda = 80; % for RML
 DeltaLambda = (FinalLambda - Params.CLDA.Lambda) ...
     / ((Params.NumAdaptBlocks-3)...
     *Params.NumTrialsPerBlock...
@@ -226,9 +226,15 @@ end
 
 %% Hold Times
 Params.TargetHoldTime = .1;
+if strcmpi(Params.Task, 'RadialKeyboard')
+    Params.TargetHoldTime = .6;
+end
 Params.InterTrialInterval = 0;
 if Params.CenterReset,
     Params.InstructedDelayTime = .6;
+    if strcmpi(Params.Task, 'RadialKeyboard')
+        Params.InstructedDelayTime = 0;
+    end
 else,
     Params.InstructedDelayTime = 0;
 end
@@ -248,7 +254,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag = false;
+Params.GenNeuralFeaturesFlag = true;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;

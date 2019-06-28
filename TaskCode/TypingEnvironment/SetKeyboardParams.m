@@ -11,6 +11,7 @@ KP.TargetPosition = Params.ReachTargetPositions + Params.Center;
 KP.TargetRect = [-KP.TargetWidth / 2, -KP.TargetHeight / 2, KP.TargetWidth / 2, KP.TargetHeight / 2]; % Left, Top, Right, Bottom
 KP.CharColor = [255, 255, 0];
 KP.WordColor = [0, 255, 255];
+
 % Text
 KP.Text.CharacterSets = {'ABCD', 'MNOPQ', 'EFGH', 'RSTU', 'IJKL', 'VWXYZ'};
 KP.Text.SelectedCharacters = {};
