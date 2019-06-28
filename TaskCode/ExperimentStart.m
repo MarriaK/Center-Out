@@ -181,8 +181,8 @@ end
 %% Initialize Window
 Screen('Preference', 'SkipSyncTests', 0);
 if DEBUG
-    % [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [50 50 1000 1000]);
-    [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [670 80 3170 2080]);
+    [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [50 50 1500 1000]);
+    % [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', 0, 0, [670 80 3170 2080]);
 else
     [Params.WPTR, Params.ScreenRectangle] = Screen('OpenWindow', max(Screen('Screens')), 0);
 end

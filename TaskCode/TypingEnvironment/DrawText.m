@@ -6,8 +6,8 @@ p = inputParser;
 p.addRequired('Params', @isstruct)
 p.addRequired('Text', @iscellstr)
 p.addRequired('Positions', @(x) ndims(x)==2)
-p.addOptional('FontSize', 48, @isnumeric)
-p.addOptional('Offset', [18, 15], @isnumeric)
+p.addOptional('FontSize', 24, @isnumeric)
+p.addOptional('Offset', [9, 8], @isnumeric)
 p.addOptional('Color', [0, 0, 0], @isnumeric)
 p.CaseSensitive = false;
 parse(p, Params, Text, Positions, varargin{:})

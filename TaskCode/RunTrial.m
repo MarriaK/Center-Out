@@ -522,7 +522,7 @@ if ~Data.ErrorID,
                     cat(1,Params.CursorColor)',...
                     cat(1,CursorRect)')
                 [Params, inFlag] = CheckKeys(Params, Cursor);
-                if Params.DEBUG, fprintf('In Target: %i\n', inFlag); end
+                % if Params.DEBUG && inFlag, fprintf('In Target\n'); end
             else
                 inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
                 if inFlag
@@ -573,6 +573,7 @@ if ~Data.ErrorID,
             done = 1;
             if strcmpi(Params.Task, 'RadialKeyboard')
                 Params.Keyboard = MakeSelection(Params.Keyboard);
+                Params = MatchWords(Params);
         end
     end % Reach Target Loop
 end % only complete if no errors

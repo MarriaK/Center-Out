@@ -24,11 +24,10 @@ switch KP.State.Mode
 end
 
 Screen('FillRect', Params.WPTR, targ_color, Pos.TargetEdges);
-Screen('FillRect', Params.WPTR, KP.Pos.WordBox.Color, KP.Pos.WordBox.Edges);
 DrawText(Params, targ_text, Pos.TextTargets)
 DrawText(Params, join(KP.Text.SelectedCharacters, '-'), KP.Pos.CharDisplay,  KP.Text.CharDisplayOpts{:})
 DrawText(Params, join(KP.Text.SelectedWords, ' '), KP.Pos.WordDisplay,  KP.Text.WordDisplayOpts{:})
-% DrawText(Params, join(KP.Text.SelectedWords, ' '), [100, 100],  KP.Text.WordDisplayOpts{:})
+DrawWordBox(Params, 'DrawTitle', false);
 DrawArrow(Params, Pos.F_Arrow, 'R')
 DrawArrow(Params, Pos.B_Arrow, 'L')
 end  % function
