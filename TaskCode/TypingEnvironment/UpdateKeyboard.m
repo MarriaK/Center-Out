@@ -23,6 +23,7 @@ switch KP.State.Mode
         targ_color = KP.CharColor;
 end
 
+Params = MatchWords(Params);
 Screen('FillRect', Params.WPTR, targ_color, Pos.TargetEdges);
 DrawText(Params, targ_text, Pos.TextTargets)
 DrawText(Params, join(KP.Text.SelectedCharacters, '-'), KP.Pos.CharDisplay,  KP.Text.CharDisplayOpts{:})

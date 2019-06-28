@@ -10,7 +10,9 @@ if any(KP.State.InText)
             KP.Text.SelectedCharacters = [KP.Text.SelectedCharacters, KP.State.SelectableText(KP.State.InText)];
         case 'Word'
             KP.Text.SelectedWords = [KP.Text.SelectedWords, KP.State.SelectableText(KP.State.InText)];
-            KP.State.CharSetHistory = [KP.State.CharSetHistory; KP.Text.SelectedCharacters];
+            % TODO: change this to a cell of cells
+            % KP.State.CharSetHistory = [KP.State.CharSetHistory; KP.Text.SelectedCharacters];
+            KP.State.CharSetHistory = {KP.State.CharSetHistory; KP.Text.SelectedCharacters};
             KP.Text.SelectedCharacters = {};
             KP.State.Mode = 'Character';
             KP.State.SelectableText = KP.Text.CharacterSets;
@@ -35,6 +37,7 @@ elseif any(KP.State.InArrow)
                 switch KP.State.History{end}
                 case 'Character'
                     KP.Text.SelectedCharacters = KP.Text.SelectedCharacters(1:end-1);
+                    KP.Text.WordMatches = KP.State.WordSetHistory{end};
                 case 'Word'
                     KP.Text.SelectedWords = KP.Text.SelectedWords(1:end-1);
                     if size(KP.State.CharSetHistory, 1) > 1

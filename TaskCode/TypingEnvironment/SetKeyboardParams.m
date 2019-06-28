@@ -114,5 +114,6 @@ KP.State.NText = n_text;
 KP.State.NArrow = n_arrow;
 KP.Text.NextWordSet = KP.Text.WordSet(1:n_text); % NOTE: text here, not well organized
 KP.State.CharSetHistory = {};
+KP.State.WordSetHistory = {};
 
 end  % function

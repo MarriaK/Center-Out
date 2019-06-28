@@ -5,6 +5,7 @@ KP = Params.Keyboard;
 
 c_dim = length(KP.Text.SelectedCharacters);
 if c_dim > 0
+    KP.State.WordSetHistory = {KP.State.WordSetHistory; KP.Text.WordMatches};
     word_len = cellfun(@length, KP.Text.WordMatches);
     KP.Text.WordMatches(word_len < c_dim) = [];
     b_matches = false(length(KP.Text.WordMatches), 1);

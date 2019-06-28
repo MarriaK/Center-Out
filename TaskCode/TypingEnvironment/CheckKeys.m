@@ -1,6 +1,7 @@
 function [Params, inFlag] = CheckKeys(Params, Cursor)
 % [b_in_text, b_in_arrow] = CheckKeys(KP, Cursor)
 
+% TODO: change to accurate check
 KP = Params.Keyboard;
 Targets = [KP.Pos.ArrowTargets; KP.Pos.TextTargets];
 pos_curosr = real(Cursor.State(1:2)') + Params.Center;
