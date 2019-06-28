@@ -17,7 +17,10 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
+Params.CenterReset      = false; % if true, cursor automatically is at center at trial start
+if strcmpi(Params.Task, 'RadialKeyboard')
+    Params.CenterReset      = true;
+end
 Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= true;
 
@@ -30,7 +33,7 @@ Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 2;
+Params.Gain                             = 6;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
@@ -58,8 +61,8 @@ elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Center-Out/';
     % projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
 else,
-    % projectdir = '~/Projects/Center-Out/';
-    projectdir = fullfile('../');
+    projectdir = '~/Projects/Center-Out/';
+%     projectdir = fullfile('../');
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
@@ -175,7 +178,7 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 Params.NumImaginedBlocks    = 0;
 Params.NumAdaptBlocks       = 0;
 Params.NumFixedBlocks       = 1;
-Params.NumTrialsPerBlock    = 50; %length(Params.ReachTargetAngles);
+Params.NumTrialsPerBlock    = 25; %length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
     case 1, Params.TargetFunc = @(n) mod(randperm(n),Params.NumReachTargets)+1;
@@ -192,8 +195,8 @@ Params.CLDA.UpdateTime = 80; % secs, for smooth batch
 Params.CLDA.Alpha = exp(log(.5) / (120/Params.CLDA.UpdateTime)); % for smooth batch
 
 % Lambda
-Params.CLDA.Lambda = 80; % for RML
-FinalLambda = 80; % for RML
+Params.CLDA.Lambda = 5000; % for RML
+FinalLambda = 5000; % for RML
 DeltaLambda = (FinalLambda - Params.CLDA.Lambda) ...
     / ((Params.NumAdaptBlocks-3)...
     *Params.NumTrialsPerBlock...
@@ -254,7 +257,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag = true;
+Params.GenNeuralFeaturesFlag = false;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;

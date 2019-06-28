@@ -1,4 +1,5 @@
-addpath(genpath('../'))
+% TODO: fix bug in word update
+addpath(genpath('../'))p
 Params.Subject = 'test';
 Params.ControlMode = 2;
 Params.BLACKROCK = 0;

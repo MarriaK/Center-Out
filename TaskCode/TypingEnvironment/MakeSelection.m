@@ -41,7 +41,7 @@ elseif any(KP.State.InArrow)
                 case 'Word'
                     KP.Text.SelectedWords = KP.Text.SelectedWords(1:end-1);
                     if size(KP.State.CharSetHistory, 1) > 1
-                        KP.Text.SelectedCharacters = KP.State.CharSetHistory(end);
+                        KP.Text.SelectedCharacters = KP.State.CharSetHistory{end};
                         KP.State.CharSetHistory = KP.State.CharSetHistory{1:end-1};
                     elseif size(KP.State.CharSetHistory, 1) == 1
                         KP.Text.SelectedCharacters = KP.State.CharSetHistory(end);

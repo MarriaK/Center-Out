@@ -76,7 +76,11 @@ KP.Text.WordSet = {'I',
                  'computer',
                  'yes',
                  'up',
-                 'no'};
+                 'no',
+                 'friend',
+                 'today',
+                 'doing',
+                 'job'};
 KP.Text.WordMatches = KP.Text.WordSet;
 
 %% Keyboard layout
