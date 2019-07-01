@@ -10,8 +10,6 @@ if any(KP.State.InText)
             KP.Text.SelectedCharacters = [KP.Text.SelectedCharacters, KP.State.SelectableText(KP.State.InText)];
         case 'Word'
             KP.Text.SelectedWords = [KP.Text.SelectedWords, KP.State.SelectableText(KP.State.InText)];
-            % TODO: change this to a cell of cells
-            % KP.State.CharSetHistory = [KP.State.CharSetHistory; KP.Text.SelectedCharacters];
             KP.State.CharSetHistory = {KP.State.CharSetHistory; KP.Text.SelectedCharacters};
             KP.Text.SelectedCharacters = {};
             KP.State.Mode = 'Character';
