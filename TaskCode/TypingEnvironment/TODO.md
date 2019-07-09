@@ -11,4 +11,8 @@
 - [ ] increase corpus size
 - [ ] auto start recording
 - [ ] send text annotations to blackrock
-- [ ] simpler state history = just store history of State struct
+- [x] simpler state history = just store history of State struct
+- [x] clean up params and history storage
+- [ ] add max history buffer (50 undos?)
+- [ ] improve documentation
+- [ ] add ITI

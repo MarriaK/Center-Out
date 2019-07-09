@@ -226,7 +226,9 @@ if ~Data.ErrorID && ~Params.CenterReset && TaskFlag>1,
 
             % draw
             if strcmpi(Params.Task, 'RadialKeyboard')
-                if Params.DEBUG, fprintf('Start Target\n'); end
+                if Params.DEBUG && Params.Keyboard.Verbose
+                    fprintf('Start Target\n');
+                end
                 UpdateKeyboard(Params);
                 Screen('FillOval', Params.WPTR, ...
                     cat(1,Params.CursorColor)',...
@@ -378,7 +380,9 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
 
             % draw
             if strcmpi(Params.Task, 'RadialKeyboard')
-                if Params.DEBUG, fprintf('Delay'); end
+                if Params.DEBUG && Params.Keyboard.Verbose
+                    fprintf('Delay\n');
+                end
                 UpdateKeyboard(Params);
                 Screen('FillOval', Params.WPTR, ...
                     cat(1,Params.CursorColor)',...
@@ -516,13 +520,17 @@ if ~Data.ErrorID,
             % draw
 
             if strcmpi(Params.Task, 'RadialKeyboard')
-                % if Params.DEBUG, fprintf('Reach Target\n'); end
+                if Params.DEBUG && Params.Keyboard.Verbose
+                    fprintf('Reach Target\n');
+                end
                 Params = UpdateKeyboard(Params);
                 Screen('FillOval', Params.WPTR, ...
                     cat(1,Params.CursorColor)',...
                     cat(1,CursorRect)')
                 [Params, inFlag] = CheckKeys(Params, Cursor);
-                % if Params.DEBUG && inFlag, fprintf('In Target\n'); end
+                if Params.DEBUG && inFlag && Params.Keyboard.Verbose
+                    fprintf('In Target\n');
+                end
             else
                 inFlag = InTarget(Cursor,ReachTargetPos,Params.TargetSize);
                 if inFlag
@@ -575,7 +583,7 @@ if ~Data.ErrorID,
                 Params = MakeSelection(Params);
                 Params = MatchWords(Params);
                 if Params.DEBUG
-                    fprintf('%s\n', Params.Keyboard.State.Mode);
+                    fprintf('Mode: %s\n', Params.Keyboard.State.Mode);
                 end
         end
     end % Reach Target Loop

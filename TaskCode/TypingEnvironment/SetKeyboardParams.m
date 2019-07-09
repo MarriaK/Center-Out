@@ -1,8 +1,11 @@
 function [ KP ] = SetKeyboardParams(Params)
 % [ KP ] = SetKeyboardParams(Params)
 
-% Targets
 KP = struct();
+
+% debugging
+KP.Verbose = false;
+% Targets
 KP.TargetWidth = 125;
 KP.TargetHeight = 75;
 % TrialData.TargetPosition normally set in RunLoop.m
@@ -14,8 +17,6 @@ KP.WordColor = [0, 255, 255];
 
 %% Text
 KP.Text.CharacterSets = {'ABCD', 'MNOPQ', 'EFGH', 'RSTU', 'IJKL', 'VWXYZ'};
-KP.Text.SelectedCharacters = {};
-KP.Text.SelectedWords = {};
 KP.Text.CharDisplayOpts = {'FontSize', 25,...
                             'Offset', [10, 18],...
                              'Color', [170, 170, 170]};
@@ -81,7 +82,6 @@ KP.Text.WordSet = {'I',
                  'today',
                  'doing',
                  'job'};
-KP.Text.WordMatches = KP.Text.WordSet;
 
 %% Keyboard layout
 KP.Pos = struct();
@@ -114,12 +114,13 @@ KP.State.InArrow = false(n_arrow, 1);
 KP.State.Mode = 'Character'; % or 'Word' - set during task
 KP.State.Select = false; % indicates selection has been made
 KP.State.SelectableText = KP.Text.CharacterSets;
-KP.State.History = {};
 KP.State.NText = n_text;
 KP.State.NArrow = n_arrow;
 KP.Text.NextWordSet = KP.Text.WordSet(1:n_text); % NOTE: text here, not well organized
-KP.State.CharSetHistory = {};
-KP.State.WordSetHistory = {};
 KP.State.CurrentColor = KP.WordColor;
+KP.State.StateHistory = {};
+KP.State.SelectedCharacters = {};
+KP.State.SelectedWords = {};
+KP.State.WordMatches = KP.Text.WordSet;
 
 end  % function

@@ -1,76 +1,45 @@
 function [Params] = MakeSelection(Params)
-% [KP] = MakeSelection(KP)
+% [Params] = MakeSelection(Params)
 %
 % Extended description
 
 KP = Params.Keyboard;
 
 if any(KP.State.InText)
-    KP.State.History = [KP.State.History, KP.State.Mode];
+    KP.State.StateHistory = [KP.State.StateHistory, KP];
     switch KP.State.Mode
         case 'Character'
-            KP.Text.SelectedCharacters = [KP.Text.SelectedCharacters, KP.State.SelectableText(KP.State.InText)];
+            KP.State.SelectedCharacters = [KP.State.SelectedCharacters, KP.State.SelectableText(KP.State.InText)];
         case 'Word'
             if Params.DEBUG
-                fprintf('%s \n', KP.State.SelectableText{:});
+                fprintf('Selectable text: ');
+                fprintf('%s ', KP.State.SelectableText{:});
+                fprintf('\n');
             end
-            KP.Text.SelectedWords = [KP.Text.SelectedWords, KP.State.SelectableText(KP.State.InText)];
-            KP.State.CharSetHistory = {KP.State.CharSetHistory; KP.Text.SelectedCharacters};
-            KP.Text.SelectedCharacters = {};
+            KP.State.SelectedWords = [KP.State.SelectedWords, KP.State.SelectableText(KP.State.InText)];
+            KP.State.SelectedCharacters = {};
             KP.State.Mode = 'Character';
-            % KP.State.SelectableText = KP.Text.CharacterSets;
-            KP.Text.WordMatches = KP.Text.WordSet;
+            KP.State.WordMatches = KP.Text.WordSet;
             KP.Text.NextWordSet = KP.Text.WordSet(1:KP.State.NText);
         otherwise
             % Null
     end
 elseif any(KP.State.InArrow)
     if Params.DEBUG
-        fprintf('%s\n', KP.Pos.ArrowLabels{KP.State.InArrow})
+        fprintf('Selected arrow: ')
+        fprintf('%s ', KP.Pos.ArrowLabels{KP.State.InArrow})
+        fprintf('\n');
     end
     switch KP.Pos.ArrowLabels{KP.State.InArrow}
     case 'Forward'
-        KP.State.History = [KP.State.History, KP.State.Mode];
+        KP.State.StateHistory = [KP.State.StateHistory, KP];
         KP.State.Mode = 'Word';
         % TODO: select next alternate word set
-        % KP.State.SelectableText = KP.Text.NextWordSet;
     case 'Back'
-        if length(KP.State.History) > 1
-            switch KP.State.Mode
-            case 'Word'
-                switch KP.State.History{end}
-                case 'Character'
-                    % noop
-                case 'Word'
-                    KP.Text.SelectedWords = KP.Text.SelectedWords(1:end-1);
-                end  % switch KP.State.History{end}
-            case 'Character'
-                switch KP.State.History{end}
-                case 'Character'
-                    KP.Text.SelectedCharacters = KP.Text.SelectedCharacters(1:end-1);
-                    KP.State.WordSetHistory = KP.State.WordSetHistory{1:end-1};
-                    KP.Text.WordMatches = KP.State.WordSetHistory{end};
-                case 'Word'
-                    KP.Text.SelectedWords = KP.Text.SelectedWords(1:end-1);
-                    if size(KP.State.CharSetHistory, 1) > 1
-                        KP.Text.SelectedCharacters = KP.State.CharSetHistory{end};
-                        KP.State.CharSetHistory = KP.State.CharSetHistory{1:end-1};
-                    elseif size(KP.State.CharSetHistory, 1) == 1
-                        KP.Text.SelectedCharacters = KP.State.CharSetHistory(end);
-                        KP.State.CharSetHistory = {};
-                    else
-                        KP.Text.SelectedCharacters = {};
-                        KP.State.CharSetHistory = {};
-                    end
-                end % switch KP.State.History{end}
-            end % switch KP.State.Mode
-            KP.State.Mode = KP.State.History{end};
-            KP.State.History = KP.State.History(1:end-1);
+        if length(KP.State.StateHistory) > 1
+            KP = KP.State.StateHistory{end};
         else
-            KP.State.History = {};
-            KP.State.Mode = 'Character';
-            KP.Text.SelectedCharacters = {};
-            KP.Text.SelectedWords = {};
+            KP = SetKeyboardParams(Params);
         end % if length(History) >= 1
     end % switch arrow label
 end % if InTarget or InArrow

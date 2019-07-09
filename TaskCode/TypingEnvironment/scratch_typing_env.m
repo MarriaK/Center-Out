@@ -25,12 +25,12 @@ TrialData.TargetID = 1;
 KP = SetKeyboardParams(Params); % proabably add this to ExperimentStart
 Params.Keyboard = KP;
 
-KP.Text.SelectedCharacters = {'ABCD'};
+KP.State.SelectedCharacters = {'ABCD'};
 Params.Keyboard = KP;
 Params = MatchWords(Params);
 KP = Params.Keyboard;
 
-KP.Text.SelectedCharacters = [KP.Text.SelectedCharacters, 'MNOPQ'];
+KP.State.SelectedCharacters = [KP.State.SelectedCharacters, 'MNOPQ'];
 Params.Keyboard = KP;
 Params = MatchWords(Params);
 KP = Params.Keyboard;

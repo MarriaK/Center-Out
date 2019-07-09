@@ -27,8 +27,8 @@ Params = MatchWords(Params);
 Pos = Params.Keyboard.Pos;
 Screen('FillRect', Params.WPTR, Params.Keyboard.State.CurrentColor, Pos.TargetEdges);
 DrawText(Params, Params.Keyboard.State.SelectableText, Pos.TextTargets)
-DrawText(Params, join(Params.Keyboard.Text.SelectedCharacters, '-'), Params.Keyboard.Pos.CharDisplay,  Params.Keyboard.Text.CharDisplayOpts{:})
-DrawText(Params, join(Params.Keyboard.Text.SelectedWords, ' '), Params.Keyboard.Pos.WordDisplay,  Params.Keyboard.Text.WordDisplayOpts{:})
+DrawText(Params, join(Params.Keyboard.State.SelectedCharacters, '-'), Params.Keyboard.Pos.CharDisplay,  Params.Keyboard.Text.CharDisplayOpts{:})
+DrawText(Params, join(Params.Keyboard.State.SelectedWords, ' '), Params.Keyboard.Pos.WordDisplay,  Params.Keyboard.Text.WordDisplayOpts{:})
 DrawWordBox(Params, 'DrawTitle', false);
 DrawArrow(Params, Pos.F_Arrow, 'R')
 DrawArrow(Params, Pos.B_Arrow, 'L')
