@@ -11,3 +11,4 @@
 - [ ] increase corpus size
 - [ ] auto start recording
 - [ ] send text annotations to blackrock
+- [ ] simpler state history = just store history of State struct

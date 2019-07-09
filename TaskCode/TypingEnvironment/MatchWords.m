@@ -23,7 +23,10 @@ if c_dim > 0
         KP.Text.NextWordSet = KP.Text.WordMatches;
         KP.Text.NextWordSet(end+1:KP.State.NText) = {' '};
     end
-
-    Params.Keyboard = KP;
+else
+    KP.Text.WordMatches = KP.Text.WordSet;
+    KP.Text.NextWordSet = KP.Text.WordMatches(1:KP.State.NText);
+    KP.State.WordSetHistory = {};
 end
+Params.Keyboard = KP;
 end  % MatchWords

@@ -61,8 +61,8 @@ elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Center-Out/';
     % projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
 else,
-    projectdir = '~/Projects/Center-Out/';
-%     projectdir = fullfile('../');
+    % projectdir = '~/Projects/Center-Out/';
+    projectdir = fullfile('../../');
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));

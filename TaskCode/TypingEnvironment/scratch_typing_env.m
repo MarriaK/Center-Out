@@ -1,5 +1,11 @@
 % TODO: fix bug in word update
-addpath(genpath('../'))p
+addpath(genpath('../'))
+
+ExperimentStart('test', 2, 0, 1)
+
+pwd
+
+
 Params.Subject = 'test';
 Params.ControlMode = 2;
 Params.BLACKROCK = 0;
@@ -29,6 +35,10 @@ Params.Keyboard = KP;
 Params = MatchWords(Params);
 KP = Params.Keyboard;
 
+Params.Keyboard.State.Mode = 'Word';
+
 Params.Keyboard = KP;
 UpdateKeyboard(Params);
 Screen('Flip', Params.WPTR);
+
+Screen('CloseAll')

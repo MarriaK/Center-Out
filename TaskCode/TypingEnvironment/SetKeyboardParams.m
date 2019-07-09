@@ -95,6 +95,7 @@ KP.Pos.TargetEdges = (repmat(KP.TargetPosition, 1, 2) + KP.TargetRect)';
 [~, ix_right_targ] = max(KP.TargetPosition(:, 1));
 KP.Pos.CharDisplay = KP.TargetPosition(ix_top_targ, :) - [0, KP.TargetHeight * 0.75];
 KP.Pos.WordDisplay = KP.Pos.CharDisplay - [0, KP.TargetHeight];
+
 % Word Box
 KP.Pos.WordBox.H = KP.TargetHeight * 4;
 KP.Pos.WordBox.W = KP.TargetWidth;
@@ -119,5 +120,6 @@ KP.State.NArrow = n_arrow;
 KP.Text.NextWordSet = KP.Text.WordSet(1:n_text); % NOTE: text here, not well organized
 KP.State.CharSetHistory = {};
 KP.State.WordSetHistory = {};
+KP.State.CurrentColor = KP.WordColor;
 
 end  % function

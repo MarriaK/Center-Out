@@ -517,7 +517,7 @@ if ~Data.ErrorID,
 
             if strcmpi(Params.Task, 'RadialKeyboard')
                 % if Params.DEBUG, fprintf('Reach Target\n'); end
-                UpdateKeyboard(Params);
+                Params = UpdateKeyboard(Params);
                 Screen('FillOval', Params.WPTR, ...
                     cat(1,Params.CursorColor)',...
                     cat(1,CursorRect)')
@@ -572,8 +572,11 @@ if ~Data.ErrorID,
         if InTargetTotalTime > Params.TargetHoldTime,
             done = 1;
             if strcmpi(Params.Task, 'RadialKeyboard')
-                Params.Keyboard = MakeSelection(Params.Keyboard);
+                Params = MakeSelection(Params);
                 Params = MatchWords(Params);
+                if Params.DEBUG
+                    fprintf('%s\n', Params.Keyboard.State.Mode);
+                end
         end
     end % Reach Target Loop
 end % only complete if no errors

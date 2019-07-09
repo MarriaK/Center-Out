@@ -1,4 +1,4 @@
-function UpdateKeyboard(Params)
+function [Params] = UpdateKeyboard(Params)
 % function: Short description
 %
 % Extended description
@@ -11,24 +11,26 @@ parse(p, Params)
 KP = Params.Keyboard;
 Pos = KP.Pos;
 
-switch KP.State.Mode
+switch Params.Keyboard.State.Mode
     case 'Character'
-        targ_text = KP.Text.CharacterSets;
-        targ_color = KP.CharColor;
+        Params.Keyboard.State.SelectableText = Params.Keyboard.Text.CharacterSets;
+        Params.Keyboard.State.CurrentColor = Params.Keyboard.CharColor;
     case 'Word'
-        targ_text = KP.Text.NextWordSet;
-        targ_color = KP.WordColor;
+        Params.Keyboard.State.SelectableText = Params.Keyboard.Text.NextWordSet;
+        Params.Keyboard.State.CurrentColor = Params.Keyboard.WordColor;
     otherwise
-        targ_text = KP.Text.CharacterSets;
-        targ_color = KP.CharColor;
+        Params.Keyboard.State.SelectableText = Params.Keyboard.Text.CharacterSets;
+        Params.Keyboard.State.CurrentColor = Params.Keyboard.CharColor;
 end
 
 Params = MatchWords(Params);
-Screen('FillRect', Params.WPTR, targ_color, Pos.TargetEdges);
-DrawText(Params, targ_text, Pos.TextTargets)
-DrawText(Params, join(KP.Text.SelectedCharacters, '-'), KP.Pos.CharDisplay,  KP.Text.CharDisplayOpts{:})
-DrawText(Params, join(KP.Text.SelectedWords, ' '), KP.Pos.WordDisplay,  KP.Text.WordDisplayOpts{:})
+Pos = Params.Keyboard.Pos;
+Screen('FillRect', Params.WPTR, Params.Keyboard.State.CurrentColor, Pos.TargetEdges);
+DrawText(Params, Params.Keyboard.State.SelectableText, Pos.TextTargets)
+DrawText(Params, join(Params.Keyboard.Text.SelectedCharacters, '-'), Params.Keyboard.Pos.CharDisplay,  Params.Keyboard.Text.CharDisplayOpts{:})
+DrawText(Params, join(Params.Keyboard.Text.SelectedWords, ' '), Params.Keyboard.Pos.WordDisplay,  Params.Keyboard.Text.WordDisplayOpts{:})
 DrawWordBox(Params, 'DrawTitle', false);
 DrawArrow(Params, Pos.F_Arrow, 'R')
 DrawArrow(Params, Pos.B_Arrow, 'L')
+
 end  % function
