@@ -19,7 +19,7 @@ end
 
 % If Initialization Mode = 3, manually choose datadir & fit KF
 if KF.InitializationMode==3 && fitFlag==0,
-    datadir = uigetdir(datadir);
+    datadir = uigetdir(datadir,'Select Directory to Initialize Kalman Filter');
 end
 
 % If Initialization Mode = 4, load kf params from persistence folder
@@ -37,7 +37,7 @@ if KF.InitializationMode==4 && fitFlag==0,
         KF.Tinv = f.KF.Tinv;
         KF.Qinv = f.KF.Qinv;
     else, % load reduced KF
-        [filename,pathname] = uigetfile('*.mat');
+        [filename,pathname] = uigetfile('*.mat','Select Kalman Filter to Load');
         f=load(fullfile(pathname,filename));
         KF.Lambda = Params.CLDA.Lambda;
         KF.P = f.KF.P;
