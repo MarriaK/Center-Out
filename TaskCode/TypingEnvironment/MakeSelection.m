@@ -6,7 +6,8 @@ function [Params] = MakeSelection(Params)
 KP = Params.Keyboard;
 
 if any(KP.State.InText)
-    KP.State.StateHistory = [KP.State.StateHistory, KP];
+    KP.History.State = [KP.History.State, KP.State];
+    KP.History.Trajectory = [KP.History.Trajectory, KP.State];
     switch KP.State.Mode
         case 'Character'
             KP.State.SelectedCharacters = [KP.State.SelectedCharacters, KP.State.SelectableText(KP.State.InText)];
@@ -20,7 +21,7 @@ if any(KP.State.InText)
             KP.State.SelectedCharacters = {};
             KP.State.Mode = 'Character';
             KP.State.WordMatches = KP.Text.WordSet;
-            KP.Text.NextWordSet = KP.Text.WordSet(1:KP.State.NText);
+            KP.State.NextWordSet = KP.Text.WordSet(1:KP.State.NText);
         otherwise
             % Null
     end
@@ -30,16 +31,19 @@ elseif any(KP.State.InArrow)
         fprintf('%s ', KP.Pos.ArrowLabels{KP.State.InArrow})
         fprintf('\n');
     end
+    KP.History.Trajectory = [KP.History.Trajectory, KP.State];
     switch KP.Pos.ArrowLabels{KP.State.InArrow}
     case 'Forward'
-        KP.State.StateHistory = [KP.State.StateHistory, KP];
+        KP.History.State = [KP.History.State, KP.State];
         KP.State.Mode = 'Word';
         % TODO: select next alternate word set
     case 'Back'
-        if length(KP.State.StateHistory) > 1
-            KP = KP.State.StateHistory{end};
+        if length(KP.History.State) >= 1
+            KP.State = KP.History.State{end};
+            KP.History.State = KP.History.State(1:end-1);
         else
-            KP = SetKeyboardParams(Params);
+            % NOTE: do a noop or prompt to end
+            % KP = SetKeyboardParams(Params);
         end % if length(History) >= 1
     end % switch arrow label
 end % if InTarget or InArrow

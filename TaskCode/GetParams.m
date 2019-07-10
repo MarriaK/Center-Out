@@ -239,9 +239,10 @@ Params.MaxStartTime = 25;
 Params.MaxReachTime = 25;
 Params.InterBlockInterval = 10; % 0-10s, if set to 10 use instruction screen
 Params.ImaginedMvmtTime = 3;
+
 if strcmpi(Params.Task, 'RadialKeyboard')
     Params.TargetHoldTime = .6;
-    Params.InstructedDelayTime = 0.6;
+    Params.InstructedDelayTime = 00.6;
 end
 %% Feedback
 Params.FeedbackSound = false;

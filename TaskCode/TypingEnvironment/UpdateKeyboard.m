@@ -16,7 +16,7 @@ switch Params.Keyboard.State.Mode
         Params.Keyboard.State.SelectableText = Params.Keyboard.Text.CharacterSets;
         Params.Keyboard.State.CurrentColor = Params.Keyboard.CharColor;
     case 'Word'
-        Params.Keyboard.State.SelectableText = Params.Keyboard.Text.NextWordSet;
+        Params.Keyboard.State.SelectableText = Params.Keyboard.State.NextWordSet;
         Params.Keyboard.State.CurrentColor = Params.Keyboard.WordColor;
     otherwise
         Params.Keyboard.State.SelectableText = Params.Keyboard.Text.CharacterSets;
