@@ -411,6 +411,7 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             Screen('Flip', Params.WPTR);
 
             % start counting time if cursor is in target
+            inFlag = true;
             if inFlag,
                 InTargetTotalTime = InTargetTotalTime + dt;
             else, % error if they left too early

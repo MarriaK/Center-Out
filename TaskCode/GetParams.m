@@ -69,7 +69,11 @@ addpath(genpath(fullfile(projectdir,'TaskCode')));
 
 % create folders for saving
 Params.ProjectDir = projectdir;
-datadir = fullfile(projectdir,'Data',Params.Subject,Params.YYYYMMDD,Params.HHMMSS);
+if strcmpi(Params.Task, 'RadialKeyboard')
+    datadir = fullfile(projectdir,'Data','RadialKeyboard',Params.Subject,Params.YYYYMMDD,Params.HHMMSS);
+else
+    datadir = fullfile(projectdir,'Data',Params.Subject,Params.YYYYMMDD,Params.HHMMSS);
+end
 Params.Datadir = datadir;
 mkdir(datadir);
 
@@ -239,9 +243,10 @@ Params.MaxStartTime = 25;
 Params.MaxReachTime = 25;
 Params.InterBlockInterval = 10; % 0-10s, if set to 10 use instruction screen
 Params.ImaginedMvmtTime = 3;
+
 if strcmpi(Params.Task, 'RadialKeyboard')
     Params.TargetHoldTime = .6;
-    Params.InstructedDelayTime = 0.6;
+    Params.InstructedDelayTime = 00.6;
 end
 %% Feedback
 Params.FeedbackSound = false;

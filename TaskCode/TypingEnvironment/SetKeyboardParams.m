@@ -6,7 +6,7 @@ KP = struct();
 % debugging
 KP.Verbose = false;
 % Targets
-KP.TargetWidth = 125;
+KP.TargetWidth = 150;
 KP.TargetHeight = 75;
 % TrialData.TargetPosition normally set in RunLoop.m
 KP.TargetPosition = Params.ReachTargetPositions + Params.Center;
@@ -21,67 +21,14 @@ KP.Text.CharDisplayOpts = {'FontSize', 25,...
                             'Offset', [10, 18],...
                              'Color', [170, 170, 170]};
 KP.Text.WordDisplayOpts = {'FontSize', 32,...
-                            'Offset', [18, 15],...
+                            'Offset', [10, 15],...
                              'Color', [255, 255, 255]};
 KP.Text.WordBox.Title = 'Next Words';
 KP.Text.WordBox.TextOpts = {'FontSize', 25,...
-                            'Color', [0, 0, 0], ...
-                            'Offset', [0, 0]};
-
-KP.Text.WordSet = {'I',
-                 'you',
-                 'my',
-                 'they',
-                 'it',
-                 'am',
-                 'are',
-                 'need',
-                 'feel',
-                 'is',
-                 'hungry',
-                 'help',
-                 'tired',
-                 'not',
-                 'how',
-                 'okay',
-                 'very',
-                 'thirsty',
-                 'comfortable',
-                 'right',
-                 'please',
-                 'hope',
-                 'clean',
-                 'glasses',
-                 'nurse',
-                 'closer',
-                 'bring',
-                 'what',
-                 'where',
-                 'tell',
-                 'that',
-                 'going',
-                 'music',
-                 'like',
-                 'outside',
-                 'do',
-                 'have',
-                 'faith',
-                 'success',
-                 'coming',
-                 'good',
-                 'bad',
-                 'here',
-                 'family',
-                 'hello',
-                 'goodbye',
-                 'computer',
-                 'yes',
-                 'up',
-                 'no',
-                 'friend',
-                 'today',
-                 'doing',
-                 'job'};
+                            'Offset', [0, 0],...
+                            'Color', [0, 0, 0],};
+% TODO: implement select smaller sample
+KP.Text.WordSet = GetCorpus();
 
 %% Keyboard layout
 KP.Pos = struct();
@@ -116,11 +63,15 @@ KP.State.Select = false; % indicates selection has been made
 KP.State.SelectableText = KP.Text.CharacterSets;
 KP.State.NText = n_text;
 KP.State.NArrow = n_arrow;
-KP.Text.NextWordSet = KP.Text.WordSet(1:n_text); % NOTE: text here, not well organized
+KP.State.NextWordSet = KP.Text.WordSet(1:n_text); % NOTE: text here, not well organized
 KP.State.CurrentColor = KP.WordColor;
-KP.State.StateHistory = {};
 KP.State.SelectedCharacters = {};
 KP.State.SelectedWords = {};
 KP.State.WordMatches = KP.Text.WordSet;
+
+% Keyboard State History
+KP.History.State = {};
+KP.History.Trajectory = {};
+
 
 end  % function

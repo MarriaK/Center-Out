@@ -8,7 +8,7 @@ parse(p, Params, varargin{:});
 
 KP = Params.Keyboard;
 Screen('FillRect', Params.WPTR, KP.Pos.WordBox.Color, KP.Pos.WordBox.Edges);
-words = KP.Text.NextWordSet;
+words = KP.State.NextWordSet;
 n_words = length(words);
 pos = KP.Pos.WordBox.FirstEntry;
 for i_w = 1:n_words
