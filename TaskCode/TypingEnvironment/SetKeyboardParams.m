@@ -13,7 +13,7 @@ KP.TargetPosition = Params.ReachTargetPositions + Params.Center;
 % Params.TargetRect normally set in GetParams.m
 KP.TargetRect = [-KP.TargetWidth / 2, -KP.TargetHeight / 2, KP.TargetWidth / 2, KP.TargetHeight / 2]; % Left, Top, Right, Bottom
 KP.CharColor = [255, 255, 0];
-KP.WordColor = [0, 255, 255];
+KP.WordColor = [0, 150, 255];
 
 %% Text
 KP.Text.CharacterSets = {'ABCD', 'MNOPQ', 'EFGH', 'RSTU', 'IJKL', 'VWXYZ'};
@@ -22,7 +22,7 @@ KP.Text.CharDisplayOpts = {'FontSize', 25,...
                              'Color', [170, 170, 170]};
 KP.Text.WordDisplayOpts = {'FontSize', 32,...
                             'Offset', [10, 15],...
-                             'Color', [255, 255, 255]};
+                             'Color', [170, 170, 170]};
 KP.Text.WordBox.Title = 'Next Words';
 KP.Text.WordBox.TextOpts = {'FontSize', 25,...
                             'Offset', [0, 0],...
