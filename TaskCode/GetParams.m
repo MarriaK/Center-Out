@@ -61,8 +61,8 @@ elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Center-Out/';
     % projectdir = fullfile('/Users/daniel/Projects/', Params.Task);
 else,
-    % projectdir = '~/Projects/Center-Out/';
-    projectdir = fullfile('../../');
+    projectdir = '~/Projects/Center-Out/';
+    % projectdir = fullfile('../../');
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
@@ -82,7 +82,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = false;
+Params.ArduinoSync = true;
 
 %% Timing
 Params.ScreenRefreshRate = 5; % Hz
@@ -119,8 +119,8 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
 G = Params.Gain;
 t = 1/Params.UpdateRate;
-a = .8^.5; % .8
-w = 100; %750 * 100^2 / 200^2; % 750
+a = .825; % .8
+w = 150; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
         1	0	G*t	0	0;
@@ -246,7 +246,7 @@ Params.ImaginedMvmtTime = 3;
 
 if strcmpi(Params.Task, 'RadialKeyboard')
     Params.TargetHoldTime = .6;
-    Params.InstructedDelayTime = 00.6;
+    Params.InstructedDelayTime = 0.6;
 end
 %% Feedback
 Params.FeedbackSound = false;

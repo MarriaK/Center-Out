@@ -28,7 +28,8 @@ KP.Text.WordBox.TextOpts = {'FontSize', 25,...
                             'Offset', [0, 0],...
                             'Color', [0, 0, 0],};
 % TODO: implement select smaller sample
-KP.Text.WordSet = GetCorpus();
+KP.Text.CorpusSize = 200;
+KP.Text.WordSet = GetCorpus('N', KP.Text.CorpusSize);
 
 %% Keyboard layout
 KP.Pos = struct();

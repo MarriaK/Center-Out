@@ -15,4 +15,4 @@
 - [x] clean up params and history storage
 - [ ] add max history buffer (50 undos?)
 - [ ] improve documentation
-- [ ] add ITI
+- [x] add ITI

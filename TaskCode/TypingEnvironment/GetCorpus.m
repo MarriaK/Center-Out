@@ -1072,6 +1072,7 @@ n_patient_corpus = length(patient_corpus);
 if N == -1
     N = length(full_corpus) + n_patient_corpus;
 end
-corpus = [patient_corpus; full_corpus(1:N-n_patient_corpus)];
+corpus = [patient_corpus; full_corpus];
 corpus = unique(corpus, 'stable');
+corpus = corpus(1:N);
 end  % GetCorpus
