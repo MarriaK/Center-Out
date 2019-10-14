@@ -30,7 +30,7 @@ Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 8;
+Params.Gain                     =1; %8;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
