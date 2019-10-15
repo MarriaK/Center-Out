@@ -18,7 +18,7 @@ end
 
 %% Control
 Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
-Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
+Params.Assistance       = 0.05; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= true;
 
 Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
@@ -30,7 +30,7 @@ Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     =1; %8;
+Params.Gain                     =8;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
@@ -71,7 +71,7 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = false;
+Params.ArduinoSync = true;
 
 %% Timing
 Params.ScreenRefreshRate = 10; % Hz
@@ -108,8 +108,8 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
 G = Params.Gain;
 t = 1/Params.UpdateRate;
-a = .825; % .8
-w = 150; %750 * 100^2 / 200^2; % 750
+a = .8; % .8
+w = 500; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
         1	0	G*t	0	0;
@@ -169,7 +169,7 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       =1;
+Params.NumAdaptBlocks       =4;
 Params.NumFixedBlocks       = 0;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
@@ -188,7 +188,7 @@ Params.CLDA.UpdateTime = 80; % secs, for smooth batch
 Params.CLDA.Alpha = exp(log(.5) / (120/Params.CLDA.UpdateTime)); % for smooth batch
 
 % Lambda
-Params.CLDA.Lambda = 5000; % for RML
+Params.CLDA.Lambda = 300; % for RML
 FinalLambda = 5000; % for RML
 DeltaLambda = (FinalLambda - Params.CLDA.Lambda) ...
     / ((Params.NumAdaptBlocks-3)...
@@ -244,7 +244,7 @@ sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
 Params.ZBufSize = 120; % secs
-Params.GenNeuralFeaturesFlag =true;
+Params.GenNeuralFeaturesFlag =false;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;
