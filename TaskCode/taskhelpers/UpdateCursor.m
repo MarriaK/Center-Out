@@ -79,7 +79,7 @@ switch Cursor.ControlMode,
             Y = repmat(Y',7,1)*KF.PCA(:,1:10);
             Y = Y';
             Y = Y(:);
-            Y =Y';
+            
             % ignore "bad features"
             %Y = Y(Params.FeatureMask,:);
         end
