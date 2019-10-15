@@ -25,6 +25,7 @@ end
 % If Initialization Mode = 4, load kf params from persistence folder
 if KF.InitializationMode==4 && fitFlag==0,
     f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
+    KF.PCA=f.KF.PCA;
     if all(Params.FeatureMask == f.FeatureMask), % load full KF
         KF.Lambda = Params.CLDA.Lambda;
         KF.P = f.KF.P;

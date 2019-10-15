@@ -16,7 +16,7 @@ ESS     = KF.ESS;
 Lambda  = exp(log(.5) / (KF.Lambda * Params.UpdateRate));
 
 if KF.VelKF,
-    X = X(3:end);
+    X = X(3:end,:);
 end
 
 switch TaskFlag,

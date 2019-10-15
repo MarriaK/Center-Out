@@ -28,7 +28,7 @@ if Params.Verbose,
         fprintf('    Cursor Assistance: %.2f%%\n',100*Cursor.Assistance)
         if Params.CLDA.Type==3,
             %fprintf('    Lambda 1/2 life: %.2fsecs\n',log(.5)/log(KF.Lambda)/Params.UpdateRate)
-            fprintf('    Lambda 1/2 life: %.2fsecs\n',KF.Lambda)
+            %fprintf('    Lambda 1/2 life: %.2fsecs\n',KF.Lambda)
         end
     end
 end
