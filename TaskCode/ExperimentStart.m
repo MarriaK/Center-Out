@@ -43,7 +43,7 @@ if BLACKROCK,
 end
 
 % load channel layout file and store in params
-f = load(fullfile('gridmaps',Params.ChMapFile));
+f = load(fullfile('gridmaps', Params.ChMapFile));
 Params.ChMap = f.ecog_grid;
 
 %% Initialize Sync to Blackrock

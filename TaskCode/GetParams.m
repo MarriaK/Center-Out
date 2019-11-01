@@ -17,7 +17,7 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.CenterReset      = false; % if true, cursor automatically is at center at trial start
+Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
 Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
 Params.DaggerAssist 	= true;
 
@@ -25,12 +25,12 @@ Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
 
 Params.InitializationMode   = 4; % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
-Params.BaselineTime         = 0; % secs
+Params.BaselineTime         =0; % secs
 Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 8;
+Params.Gain                     = 5;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
@@ -74,8 +74,8 @@ Params.BaudRate = 115200;
 Params.ArduinoSync = true;
 
 %% Timing
-Params.ScreenRefreshRate = 5; % Hz
-Params.UpdateRate = 5; % Hz
+Params.ScreenRefreshRate = 10; % Hz
+Params.UpdateRate = 10; % Hz
 
 %% Targets
 Params.TargetSize = 30;
@@ -94,7 +94,7 @@ Params.ReachTargetPositions = ...
     * [cosd(Params.ReachTargetAngles) sind(Params.ReachTargetAngles)];
 Params.NumReachTargets = length(Params.ReachTargetAngles);
 
-Params.ReachTargetSamplingVec = [0 0 0 1 1 1 0 0];
+Params.ReachTargetSamplingVec = [3 0 1 0 3 0 1 0];
 Params.ReachTargetSamplingVec = Params.ReachTargetSamplingVec ...
     / sum(Params.ReachTargetSamplingVec);
 
@@ -169,8 +169,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 2;
-Params.NumFixedBlocks       = 2;
+Params.NumAdaptBlocks       = 0;
+Params.NumFixedBlocks       = 3;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
@@ -414,21 +414,48 @@ for feature=Params.NumPhase+1:Params.NumFeatures,
 end
 
 %% Feature Mask
+%
+% % loads feature mask
 
-% loads feature mask
-[filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
-if isequal(filename,0) || isequal(pathname,0), % pressed cancel
-    % sets all bad channels to 0, o.w. 1
+if 1, % set to 1 if want to use mask
+    [filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
+    if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+        % sets all bad channels to 0, o.w. 1
+        Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+        for i=1:length(Params.BadChannels),
+            bad_ch = Params.BadChannels(i);
+            Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+        end
+        Params.FeatureMask = Mask==1;
+    else, % user selected file
+        f = load(fullfile(pathname,filename));
+        Params.FeatureMask = (f.FeatureMask==1);
+    end
+else, % don't ask for mask
     Mask = ones(Params.NumChannels*Params.NumFeatures,1);
     for i=1:length(Params.BadChannels),
         bad_ch = Params.BadChannels(i);
         Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
     end
     Params.FeatureMask = Mask==1;
-else, % user selected file
-    f = load(fullfile(pathname,filename));
-    Params.FeatureMask = f.mask==1;
 end
+
+% %% Feature Mask
+% 
+% % loads feature mask
+% [filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
+% if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+%     % sets all bad channels to 0, o.w. 1
+%     Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+%     for i=1:length(Params.BadChannels),
+%         bad_ch = Params.BadChannels(i);
+%         Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+%     end
+%     Params.FeatureMask = Mask==1;
+% else, % user selected file
+%     f = load(fullfile(pathname,filename));
+%     Params.FeatureMask = f.mask==1;
+% end
 
 end % GetParams
 

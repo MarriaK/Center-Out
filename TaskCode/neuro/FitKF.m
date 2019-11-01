@@ -25,20 +25,7 @@ end
 % If Initialization Mode = 4, load kf params from persistence folder
 if KF.InitializationMode==4 && fitFlag==0,
     f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
-    if all(Params.FeatureMask == f.FeatureMask), % load full KF
-        KF.Lambda = Params.CLDA.Lambda;
-        KF.P = f.KF.P;
-        KF.R = f.KF.R;
-        KF.ESS = f.KF.ESS;
-        KF.S = f.KF.S;
-        KF.T = f.KF.T;
-        KF.C = f.KF.C;
-        KF.Q = f.KF.Q;
-        KF.Tinv = f.KF.Tinv;
-        KF.Qinv = f.KF.Qinv;
-    else, % load reduced KF
-        [filename,pathname] = uigetfile('*.mat','Select Kalman Filter to Load');
-        f=load(fullfile(pathname,filename));
+    if all(Params.FeatureMask == f.FeatureMask) && (size(f.FeatureMask,1)==size(f.KF.C,1)), % load full KF
         KF.Lambda = Params.CLDA.Lambda;
         KF.P = f.KF.P;
         KF.R = f.KF.R;
@@ -49,10 +36,53 @@ if KF.InitializationMode==4 && fitFlag==0,
         KF.Q = f.KF.Q(Params.FeatureMask,Params.FeatureMask);
         KF.Tinv = f.KF.Tinv(Params.FeatureMask,Params.FeatureMask);
         KF.Qinv = f.KF.Qinv(Params.FeatureMask,Params.FeatureMask);
+        
+    else, % load reduced KF
+        KF.Lambda = Params.CLDA.Lambda;
+        KF.P = f.KF.P;
+        KF.R = f.KF.R;
+        KF.ESS = f.KF.ESS;
+        KF.S = f.KF.S;
+        KF.T = f.KF.T;
+        KF.C = f.KF.C;
+        KF.Q = f.KF.Q;
+        KF.Tinv = f.KF.Tinv;
+        KF.Qinv = f.KF.Qinv;
     end
     fprintf('\n\nLoading Previous Kalman Filter:\n')
     return
 end
+% % If Initialization Mode = 4, load kf params from persistence folder
+% if KF.InitializationMode==4 && fitFlag==0,
+%     f=load(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'));
+%     if all(Params.FeatureMask == f.FeatureMask), % load full KF
+%         KF.Lambda = Params.CLDA.Lambda;
+%         KF.P = f.KF.P;
+%         KF.R = f.KF.R;
+%         KF.ESS = f.KF.ESS;
+%         KF.S = f.KF.S;
+%         KF.T = f.KF.T;
+%         KF.C = f.KF.C;
+%         KF.Q = f.KF.Q;
+%         KF.Tinv = f.KF.Tinv;
+%         KF.Qinv = f.KF.Qinv;
+%     else, % load reduced KF
+%         [filename,pathname] = uigetfile('*.mat','Select Kalman Filter to Load');
+%         f=load(fullfile(pathname,filename));
+%         KF.Lambda = Params.CLDA.Lambda;
+%         KF.P = f.KF.P;
+%         KF.R = f.KF.R;
+%         KF.ESS = f.KF.ESS;
+%         KF.S = f.KF.S(Params.FeatureMask,:);
+%         KF.T = f.KF.T(Params.FeatureMask,Params.FeatureMask);
+%         KF.C = f.KF.C(Params.FeatureMask,:);
+%         KF.Q = f.KF.Q(Params.FeatureMask,Params.FeatureMask);
+%         KF.Tinv = f.KF.Tinv(Params.FeatureMask,Params.FeatureMask);
+%         KF.Qinv = f.KF.Qinv(Params.FeatureMask,Params.FeatureMask);
+%     end
+%     fprintf('\n\nLoading Previous Kalman Filter:\n')
+%     return
+% end
 
 % ouput to screen
 fprintf('\n\nFitting Kalman Filter:\n')
