@@ -128,7 +128,7 @@ switch TaskFlag,
         end
         
         InstructionScreen(Params,Instructions);
-        Cursor.Assistance = 0;
+        Cursor.Assistance = Params.Assistance;
         Cursor.DeltaAssistance = 0;
         mkdir(fullfile(Params.Datadir,'BCI_Fixed'));
         

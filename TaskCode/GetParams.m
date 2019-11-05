@@ -18,8 +18,8 @@ end
 
 %% Control
 Params.CenterReset      = true; % if true, cursor automatically is at center at trial start
-Params.Assistance       = 0; %0.05; % value btw 0 and 1, 1 full assist
-Params.DaggerAssist 	= true;
+Params.Assistance       = 0.000; %0.05; % value btw 0 and 1, 1 full assist
+Params.DaggerAssist 	= false;
 
 Params.CLDA.Type        = 3; % 0-none, 1-refit, 2-smooth batch, 3-RML
 Params.CLDA.AdaptType   = 'linear'; % {'none','linear'}, affects assistance & lambda for rml
@@ -30,7 +30,7 @@ Params.BadChannels          = [];
 Params.SpatialFiltering     = false;
 
 %% Cursor Velocity
-Params.Gain                     = 5;
+Params.Gain                     = 10;
 Params.OptimalVeloctityMode     = 1; % 1-vector to target, 2-LQR
 Params.VelocityTransformFlag    = false;
 Params.MaxVelocityFlag          = false;
@@ -78,7 +78,7 @@ Params.ScreenRefreshRate = 10; % Hz
 Params.UpdateRate = 10; % Hz
 
 %% Targets
-Params.TargetSize = 30;
+Params.TargetSize = 60;
 Params.OutTargetColor = [55,255,0];
 Params.InTargetColor = [255,55,0];
 
@@ -108,7 +108,7 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
 Params.SaveKalmanFlag = false; % if true, saves kf at each time bin, if false, saves kf 1x per trial
 G = Params.Gain;
 t = 1/Params.UpdateRate;
-a = .825; % .8
+a = 0.9;%825; % .8
 w = 150; %750 * 100^2 / 200^2; % 750
 if Params.ControlMode>=3,
     Params.KF.A = [...
@@ -169,8 +169,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 0;
-Params.NumFixedBlocks       = 3;
+Params.NumAdaptBlocks       = 4;
+Params.NumFixedBlocks       = 4;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random, 3-repeat, 4-sample vector
 switch Params.TargetSelectionFlag,
@@ -228,8 +228,8 @@ if Params.CenterReset,
 else,
     Params.InstructedDelayTime = 0;
 end
-Params.MaxStartTime = 25;
-Params.MaxReachTime = 25;
+Params.MaxStartTime = 10;
+Params.MaxReachTime = 10;
 Params.InterBlockInterval = 10; % 0-10s, if set to 10 use instruction screen
 Params.ImaginedMvmtTime = 3;
 
