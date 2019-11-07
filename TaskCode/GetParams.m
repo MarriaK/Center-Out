@@ -160,7 +160,7 @@ if Params.OptimalVeloctityMode==2,
         0   0   0   rv];
     Params.CursorController.K = dlqr(...
         Params.CursorController.A,Params.CursorController.B,...
-        Params.CursorController.Q,Params.CursorController.R);    
+        Params.CursorController.Q,Params.CursorController.R);
 end
 
 %% Velocity Command Online Feedback
@@ -203,7 +203,7 @@ Params.CLDA.FixedLambda = FinalLambda; % for RML during fixed
 
 switch Params.CLDA.AdaptType,
     case 'none',
-        Params.CLDA.DeltaLambda = 0;  
+        Params.CLDA.DeltaLambda = 0;
         Params.CLDA.DeltaAssistance = 0;
     case 'linear',
         switch Params.CLDA.Type,
@@ -311,14 +311,14 @@ Params.FilterBank(end).phase_flag = false;
 Params.FilterBank(end).feature = 5;
 Params.FilterBank(end).spatial_filt_sz = 3;
 
-Params.FilterBank(end+1).fpass = [30,36];   % low gamma1 
+Params.FilterBank(end+1).fpass = [30,36];   % low gamma1
 Params.FilterBank(end).buffer_flag = false;
 Params.FilterBank(end).hilbert_flag = false;
 Params.FilterBank(end).phase_flag = false;
 Params.FilterBank(end).feature = 6;
 Params.FilterBank(end).spatial_filt_sz = 3;
 
-Params.FilterBank(end+1).fpass = [36,42];   % low gamma2 
+Params.FilterBank(end+1).fpass = [36,42];   % low gamma2
 Params.FilterBank(end).buffer_flag = false;
 Params.FilterBank(end).hilbert_flag = false;
 Params.FilterBank(end).phase_flag = false;
@@ -417,45 +417,44 @@ end
 %
 % % loads feature mask
 
-if 1, % set to 1 if want to use mask
-    [filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
-    if isequal(filename,0) || isequal(pathname,0), % pressed cancel
-        % sets all bad channels to 0, o.w. 1
-        Mask = ones(Params.NumChannels*Params.NumFeatures,1);
-        for i=1:length(Params.BadChannels),
-            bad_ch = Params.BadChannels(i);
-            Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
-        end
-        Params.FeatureMask = Mask==1;
-    else, % user selected file
-        f = load(fullfile(pathname,filename));
-        Params.FeatureMask = (f.FeatureMask==1);
-    end
-else, % don't ask for mask
-    Mask = ones(Params.NumChannels*Params.NumFeatures,1);
-    for i=1:length(Params.BadChannels),
-        bad_ch = Params.BadChannels(i);
-        Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
-    end
-    Params.FeatureMask = Mask==1;
-end
-
-% %% Feature Mask
-% 
-% % loads feature mask
-% [filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
-% if isequal(filename,0) || isequal(pathname,0), % pressed cancel
-%     % sets all bad channels to 0, o.w. 1
+% if 1, % set to 1 if want to use mask
+%     [filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
+%     if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+%         % sets all bad channels to 0, o.w. 1
+%         Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+%         for i=1:length(Params.BadChannels),
+%             bad_ch = Params.BadChannels(i);
+%             Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+%         end
+%         Params.FeatureMask = Mask==1;
+%     else, % user selected file
+%         f = load(fullfile(pathname,filename));
+%         Params.FeatureMask = (f.FeatureMask==1);
+%     end
+% else, % don't ask for mask
 %     Mask = ones(Params.NumChannels*Params.NumFeatures,1);
 %     for i=1:length(Params.BadChannels),
 %         bad_ch = Params.BadChannels(i);
 %         Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
 %     end
 %     Params.FeatureMask = Mask==1;
-% else, % user selected file
-%     f = load(fullfile(pathname,filename));
-%     Params.FeatureMask = f.mask==1;
 % end
 
-end % GetParams
+% %% Feature Mask
+%
+% loads feature mask
+[filename,pathname] = uigetfile('*.mat', 'Choose Feature Mask (Press Cancel for None)');
+if isequal(filename,0) || isequal(pathname,0), % pressed cancel
+    % sets all bad channels to 0, o.w. 1
+    Mask = ones(Params.NumChannels*Params.NumFeatures,1);
+    for i=1:length(Params.BadChannels),
+        bad_ch = Params.BadChannels(i);
+        Mask(bad_ch+(0:Params.NumChannels:Params.NumChannels*(Params.NumFeatures-1)),1) = 0;
+    end
+    Params.FeatureMask = Mask==1;
+else, % user selected file
+    f = load(fullfile(pathname,filename));
+    Params.FeatureMask = f.mask==1;
+end
 
+end % GetParams

@@ -1,3 +1,7 @@
-*.mat
+*Data*.mat
+*kf_params.mat
+*ch_stats.mat
+*feature_stats.mat
 *.zip
 *.m~
+scratch*
